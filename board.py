@@ -68,13 +68,13 @@ class Board:
         for i in range(len(self.appleList)):
             if self.appleList[i].loc == loc:
                 return i
-
+            
     def nextMoveGood(self,snake,index): #check this
         first = snake.body[0].newLoc()
         if (first[1] > self.cols - 1 or first[1] < 0) or (first[0] > self.rows - 1 or first[0] < 0):
             self.snakeList.pop(index)
             return False
-        elif self.grid[first[0]][first[1]] != "A": #'A' is for apple
+        elif self.grid[first[0]][first[1]] not in ["A","+"]: #'A' is for apple
             self.snakeList.pop(index)
             return False
         else:
