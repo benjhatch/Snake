@@ -68,27 +68,15 @@ class Board:
         for i in range(len(self.appleList)):
             if self.appleList[i].loc == loc:
                 return i
-            
-    def nextMoveGood(self,snake,index): #check this
-        first = snake.body[0].newLoc()
-        if (first[1] > self.cols - 1 or first[1] < 0) or (first[0] > self.rows - 1 or first[0] < 0):
-            self.snakeList.pop(index)
-            return False
-        elif self.grid[first[0]][first[1]] not in ["A","+"]: #'A' is for apple
-            self.snakeList.pop(index)
-            return False
-        else:
-            return True
-
 
     def moveSnakes(self):
         for i in range(len(self.snakeList)):
-            if self.nextMoveGood(self.snakeList[i],i): #and check this
+            if not self.snakeList[i].out:
                 loc = self.snakeList[i].body[0].loc
                 if loc not in [apple.loc for apple in self.appleList]:
-                    self.snakeList[i].moveAlong()
+                    self.snakeList[i].moveAlong(False,self.grid)
                 else:
-                    self.snakeList[i].moveAlong(True)
+                    self.snakeList[i].moveAlong(True,self.grid)
                     self.appleList[self.findApple(loc)].changeLoc(self.grid,self.getBadLocations())
 
     def displayGrid(self,screen):
@@ -115,6 +103,7 @@ class Board:
         for apple in self.appleList:
             self.grid[apple.loc[0]][apple.loc[1]] = apple.symbol
         for snake in self.snakeList:
-            for segment in snake.body:
-                self.grid[segment.loc[0]][segment.loc[1]] = segment.symbol
+            if not snake.out:
+                for segment in snake.body:
+                    self.grid[segment.loc[0]][segment.loc[1]] = segment.symbol
 
