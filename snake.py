@@ -4,6 +4,7 @@ class Snake:
     def __init__(self,body=[],out = False):
         self.body = body
         self.out = out
+        self.locations = [seg.loc for seg in body]
 
     def __repr__(self):
         output = ""
@@ -25,9 +26,11 @@ class Snake:
         self.validMove(grid)
         if hitApple:
             self.body.insert(0,Segment("o",first.newLoc(),first.dir))
+            self.locations.append(self.body[0].loc)
         else:
-            for seg in self.body:
-                seg.moveSeg()
+            for i in range(len(self.body)):
+                self.body[i].moveSeg()
+                self.locations.append(self.body[i].loc)
             for i in range(len(self.body)-1, 0, -1):
                 self.body[i].setDir(self.body[i-1].dir)
 

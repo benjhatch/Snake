@@ -5,12 +5,14 @@ import random
 import pygame as pg
 
 class Board:
-    def __init__(self,rows = 0, cols = 0, apples = 1):
+    def __init__(self,rows = 0, cols = 0, numSnakes = 1, length = 3, apples = 1):
         self.rows = rows
         self.cols = cols
         self.grid = self.makeGrid()
-        self.snakeList = []
+        self.snakeList = self.makeSnakes(numSnakes,length)
+        self.snakeLocations = [snake.locations for snake in self.snakeList if not snake.out]
         self.appleList = []
+        self.appleLocations = [apple.loc for apple in self.appleList]
         self.locations = self.getBadLocations()
         self.appleList = self.makeTree(apples)
 
@@ -40,13 +42,7 @@ class Board:
         return grid
 
     def getBadLocations(self): #definitely should make this more efficient
-        locations = []
-        for snake in self.snakeList:
-            for segment in snake.body:
-                locations.append(segment.loc)
-        for apple in self.appleList:
-            locations.append(apple.loc)
-        return locations
+        return self.snakeLocations + self.appleLocations #thats a bit better
 
     def makeTree(self,num):
         list = []
@@ -67,19 +63,20 @@ class Board:
             return 3
 
     def makeSnakes(self,numSnakes,length = 3):
+        list = []
         for i in range(numSnakes):
             row = random.randint(length, self.rows - length)
             col = random.randint(length, self.cols - length)
             possibleLoc = [row,col]
-            if possibleLoc in self.snakeList:
+            if possibleLoc in list:
                 i -= 1
             else:
                 dir = self.getDir(possibleLoc[1])
-                self.snakeList.append(Snake([Segment("o",possibleLoc,dir)]))
+                list.append(Snake([Segment("o",possibleLoc,dir)]))
                 for j in range(length-1):
-                    possibleLoc = self.snakeList[i].body[j].priorLoc()
-                    self.snakeList[i].body.append(Segment("o",possibleLoc,dir))
-        return self.snakeList
+                    possibleLoc = list[i].body[j].priorLoc()
+                    list[i].body.append(Segment("o",possibleLoc,dir))
+        return list
 
     def findApple(self,loc):
         for i in range(len(self.appleList)):
@@ -95,6 +92,7 @@ class Board:
                 else:
                     self.snakeList[i].moveAlong(True,self.grid)
                     self.appleList[self.findApple(loc)].changeLoc(self.grid,self.getBadLocations())
+                self.snakeLocations[i] = self.snakeList[i].locations
 
     def displayGrid(self,screen):
         self.updateInnerGrid()
