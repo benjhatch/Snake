@@ -7,8 +7,8 @@ frameTimer = 0
 timeLimit = 200
 keyHit = False
 
-grid = Board(15,15,2)
-grid.makeSnakes(1,3)
+grid = Board(15,15,1)
+grid.makeSnakes(2,3)
 screen = pg.display.set_mode((grid.rows * 50, grid.cols * 50))
 pg.init()
 
@@ -21,17 +21,19 @@ while run:
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 keyHit = True
-                if event.key == pg.K_w:
-                    grid.snakeList[0].changeDir(0)
+                snake = grid.determineSnake(event.key)
+                keys = grid.determineKeys(snake)
+                if event.key == keys[0]:
+                    snake.changeDir(0)
                     grid.moveSnakes()
-                elif event.key == pg.K_d:
-                    grid.snakeList[0].changeDir(1)
+                elif event.key == keys[1]:
+                    snake.changeDir(1)
                     grid.moveSnakes()
-                elif event.key == pg.K_s:
-                    grid.snakeList[0].changeDir(2)
+                elif event.key == keys[2]:
+                    snake.changeDir(2)
                     grid.moveSnakes()
-                elif event.key == pg.K_a:
-                    grid.snakeList[0].changeDir(3)
+                elif event.key == keys[3]:
+                    snake.changeDir(3)
                     grid.moveSnakes()
             if event.type == pg.QUIT:
                 run = False

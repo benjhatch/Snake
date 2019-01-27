@@ -14,6 +14,21 @@ class Board:
         self.locations = self.getBadLocations()
         self.appleList = self.makeTree(apples)
 
+    def determineSnake(self,key):
+        if key in [pg.K_w,pg.K_a,pg.K_s,pg.K_d]:
+            return self.snakeList[0]
+        return self.snakeList[1]
+
+    def determineKeys(self,snake):
+        index = -1
+        for i in range(len(self.snakeList)):
+            if self.snakeList[i] == snake:
+                index = i
+        if index == 0:
+            return [pg.K_w,pg.K_d,pg.K_s,pg.K_a]
+        else:
+            return [pg.K_UP,pg.K_RIGHT,pg.K_DOWN,pg.K_LEFT]
+
     def makeGrid(self):
         grid = []
         for r in range(self.rows):
