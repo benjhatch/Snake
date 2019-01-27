@@ -14,12 +14,14 @@ class Board:
         self.locations = self.getBadLocations()
         self.appleList = self.makeTree(apples)
 
-    def determineSnake(self,key):
+    def determineSnake(self,key): #still needs work
         if key in [pg.K_w,pg.K_a,pg.K_s,pg.K_d]:
             return self.snakeList[0]
-        return self.snakeList[1]
+        else:
+            if len(self.snakeList) > 1:
+                return self.snakeList[1]
 
-    def determineKeys(self,snake):
+    def determineKeys(self,snake): #needs updating
         index = -1
         for i in range(len(self.snakeList)):
             if self.snakeList[i] == snake:
@@ -37,7 +39,7 @@ class Board:
                 grid[r].append("+")
         return grid
 
-    def getBadLocations(self):
+    def getBadLocations(self): #definitely should make this more efficient
         locations = []
         for snake in self.snakeList:
             for segment in snake.body:

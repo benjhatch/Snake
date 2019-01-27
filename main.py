@@ -7,8 +7,13 @@ frameTimer = 0
 timeLimit = 200
 keyHit = False
 
-grid = Board(15,15,1)
-grid.makeSnakes(2,3)
+#still need to fix minor bugs :(
+
+#change me...use wasd for first snake
+grid = Board(15,15,1) #rows, cols, number of apples
+grid.makeSnakes(1,5) #number of snakes, length of snakes at start
+#cool :)
+
 screen = pg.display.set_mode((grid.rows * 50, grid.cols * 50))
 pg.init()
 
