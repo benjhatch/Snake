@@ -99,9 +99,13 @@ class Board:
         screen.fill((0,0,0))
         for apple in self.appleList:
             pg.draw.rect(screen, (255, 0, 0), ((apple.loc[1] * 50) + 1, (apple.loc[0] * 50) + 1, 48, 48))
-        for snake in self.snakeList:
-            for segment in snake.body:
-                pg.draw.rect(screen, (0, 255, 0), ((segment.loc[1] * 50) + 1, (segment.loc[0] * 50) + 1, 48, 48))
+        for i in range(len(self.snakeList)):
+            for segment in self.snakeList[i].body:
+                if i == 0:
+                    color = (0, 255, 0)
+                else:
+                    color = (0, 0, 255)
+                pg.draw.rect(screen, color, ((segment.loc[1] * 50) + 1, (segment.loc[0] * 50) + 1, 48, 48))
         pg.display.update()
 
     def printGrid(self):
