@@ -23,22 +23,24 @@ class Snake:
 
     def moveAlong(self, hitApple = False, grid = []):
         first = self.body[0]
-        self.validMove(grid)
         if hitApple:
             self.body.insert(0,Segment("o",first.newLoc(),first.dir))
             self.locations.append(self.body[0].loc)
         else:
             for i in range(len(self.body)):
                 self.body[i].moveSeg()
-                self.locations.append(self.body[i].loc)
+                if i > len(self.locations) - 1:
+                    self.locations.insert(i,self.body[i].loc)
+                else:
+                    self.locations[i] = self.body[i].loc
             for i in range(len(self.body)-1, 0, -1):
                 self.body[i].setDir(self.body[i-1].dir)
+        self.validMove(grid)
 
     def validMove(self, grid = []):
         first = self.body[0]
-        firstLoc = first.newLoc()
-        avoid = [seg.newLoc() for seg in self.body if seg != first]
-        if firstLoc in avoid:
+        firstLoc = first.loc
+        if firstLoc in self.locations[1:]:
             self.out = True
             self.body = []
             return
@@ -51,8 +53,7 @@ class Snake:
                 self.out = True
                 self.body = []
                 return
-
-
+    """
     def listLocations(self):
         output = []
         if self.out:
@@ -60,3 +61,4 @@ class Snake:
         for seg in self.body:
             output.append(seg.loc)
         return output, self.body[0].symbol
+    """

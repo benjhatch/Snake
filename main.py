@@ -10,7 +10,7 @@ keyHit = False
 #still need to fix minor bugs :(
 
 #change me...use wasd for first snake
-grid = Board(15,15,2,3,2) #rows, cols, number of apples
+grid = Board(15,15,1,3,0) #rows, cols, number of apples
 #grid.makeSnakes(1,5) #number of snakes, length of snakes at start
 #cool :)
 
