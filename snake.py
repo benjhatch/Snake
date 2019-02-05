@@ -25,7 +25,7 @@ class Snake:
         first = self.body[0]
         if hitApple:
             self.body.insert(0,Segment("o",first.newLoc(),first.dir))
-            self.locations.append(self.body[0].loc)
+            self.locations.insert(0, self.body[0].loc)
         else:
             for i in range(len(self.body)):
                 self.body[i].moveSeg()
@@ -43,12 +43,3 @@ class Snake:
         if firstLoc in self.locations[1:]:
             self.out = True
             self.body = []
-    """
-    def listLocations(self):
-        output = []
-        if self.out:
-            return output
-        for seg in self.body:
-            output.append(seg.loc)
-        return output, self.body[0].symbol
-    """
