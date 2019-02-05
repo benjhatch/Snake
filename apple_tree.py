@@ -1,10 +1,10 @@
 from apple import Apple
 class AppleTree:
-    def __init__(self,numApples = 0, grid = [], appleLocations = []):
+    def __init__(self,numApples = 0, rows = 15, cols = 15, appleLocations = []):
         self.numApples = numApples
         self.appleLocations = appleLocations
-        self.rows = len(grid)
-        self.cols = len(grid[0])
+        self.rows = rows
+        self.cols = cols
         self.appleTree = []
         for i in range(numApples):
             self.appleTree.append(Apple("A"))

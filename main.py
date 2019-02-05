@@ -10,10 +10,11 @@ keyHit = False
 #still need to fix minor bugs :(
 
 #change me...use wasd for first snake
-grid = Board(15,15,1,3,1) #rows, cols, number of snakes, length of snakes, number of apples
+board = Board(15,15,1,3,1) #rows, cols, number of snakes, length of snakes, number of apples
+snakes = board.snakes
 #cool :)
 
-screen = pg.display.set_mode((grid.rows * 50, grid.cols * 50))
+screen = pg.display.set_mode((board.rows * 50, board.cols * 50))
 pg.init()
 
 
@@ -25,23 +26,23 @@ while run:
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 keyHit = True
-                snake = grid.determineSnake(event.key)
-                keys = grid.determineKeys(snake)
+                snake = board.determineSnake(event.key)
+                keys = board.determineKeys(snake)
                 if event.key == keys[0]:
                     snake.changeDir(0)
-                    grid.moveSnakes()
+                    snakes.moveSnakes()
                 elif event.key == keys[1]:
                     snake.changeDir(1)
-                    grid.moveSnakes()
+                    snakes.moveSnakes()
                 elif event.key == keys[2]:
                     snake.changeDir(2)
-                    grid.moveSnakes()
+                    snakes.moveSnakes()
                 elif event.key == keys[3]:
                     snake.changeDir(3)
-                    grid.moveSnakes()
+                    snakes.moveSnakes()
             if event.type == pg.QUIT:
                 run = False
         if not keyHit:
-            grid.moveSnakes()
+            snakes.moveSnakes()
         keyHit = False
-        grid.displayGrid(screen)
+        board.displayGame(screen)
