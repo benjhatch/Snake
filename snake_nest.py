@@ -33,18 +33,16 @@ class SnakeNest:
         else:
             return 3 #left
 
-    def moveSnakes(self):
-        for i in range(len(self.nest)): #somewhat working, biased for second
-            if self.nest[i].out:
-                return
-            snake = self.nest[i]
-            snake.moveAlong(self.apples.snakeHitApple(snake))
-            self.snakeLocations[i] = snake.locations #this is the bias, make a new locations function
-            if self.checkOut(i):
-                self.nest.pop(i)
-                break
+    def moveSnakes(self,index = 0):
+        if index == len(self.nest) - 1:
+            self.nest[index].moveAlong(self.snakeHitApple(index))
+            self.checkOut(index)
+        else:
+            self.nest[index].moveAlong(self.snakeHitApple(index))
+            self.moveSnakes(index + 1)
+            self.checkOut(index)
 
-    def checkOut(self, snakeIndex): #why is this not killing one snake when it hits another?
+    def checkOut(self, snakeIndex):
         out = False
         snake = self.nest[snakeIndex]
         if len(snake.body) > 0:
@@ -57,6 +55,13 @@ class SnakeNest:
                         out = True
         if out:
             snake.out = True
-            snake.body = []
-            self.snakeLocations.pop(snakeIndex)
-            return out
+
+    def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
+        apples = self.apples
+        head = self.nest[index].body[0].loc
+        for i in range(len(apples.appleTree)):
+            if head == apples.appleLocations[i]:
+                apples.appleTree[i].changeLoc(self.rows,self.columns,apples.appleLocations)
+                apples.appleLocations[i] = apples.appleTree[i].loc
+                return True
+        return False

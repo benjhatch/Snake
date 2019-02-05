@@ -22,6 +22,9 @@ class Snake:
                 self.body[0].setDir(newDir)
 
     def moveAlong(self, hitApple = False):
+        if self.out:
+            self.body = []
+            return
         first = self.body[0]
         if hitApple:
             self.body.insert(0,Segment("o",first.newLoc(),first.dir))
@@ -42,4 +45,3 @@ class Snake:
         firstLoc = first.loc
         if firstLoc in self.locations[1:]:
             self.out = True
-            self.body = []
