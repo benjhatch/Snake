@@ -88,11 +88,22 @@ class Board:
             if not self.snakeList[i].out:
                 loc = self.snakeList[i].body[0].loc
                 if loc not in [apple.loc for apple in self.appleList]:
-                    self.snakeList[i].moveAlong(False,self.grid)
+                    self.snakeList[i].moveAlong(False)
                 else:
-                    self.snakeList[i].moveAlong(True,self.grid)
-                    self.appleList[self.findApple(loc)].changeLoc(self.grid,self.getBadLocations())
+                    self.snakeList[i].moveAlong(True)
+                    #self.appleList[self.findApple(loc)].changeLoc(self.grid,self.getBadLocations())
                 self.snakeLocations[i] = self.snakeList[i].locations
+                self.checkOutOfBounds(self.snakeList[i])
+
+    def checkOutOfBounds(self, snake):
+        firstLoc = snake.body[0].loc
+        if (firstLoc[1] > len(self.grid[0]) - 1 or firstLoc[1] < 0) or (firstLoc[0] > len(self.grid) - 1 or firstLoc[0] < 0):
+            snake.out = True
+            snake.body = []
+        elif self.grid[firstLoc[0]][firstLoc[1]] not in ["A", "+"]:
+            snake.out = True
+            snake.body = []
+
 
     def displayGrid(self,screen):
         self.updateInnerGrid()
@@ -108,13 +119,6 @@ class Board:
                 pg.draw.rect(screen, color, ((segment.loc[1] * 50) + 1, (segment.loc[0] * 50) + 1, 48, 48))
         pg.display.update()
 
-    def printGrid(self):
-        self.updateInnerGrid()
-        for r in range(len(self.grid)):
-            for c in range(len(self.grid[0])):
-                print(self.grid[r][c], end="")
-            print()
-
     def updateInnerGrid(self):
         for r in range(self.rows):
             for c in range(self.cols):
@@ -126,3 +130,9 @@ class Board:
                 for segment in snake.body:
                     self.grid[segment.loc[0]][segment.loc[1]] = segment.symbol
 
+    def printGrid(self):
+        self.updateInnerGrid()
+        for r in range(len(self.grid)):
+            for c in range(len(self.grid[0])):
+                print(self.grid[r][c], end="")
+            print()

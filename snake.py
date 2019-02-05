@@ -21,7 +21,7 @@ class Snake:
             if first.newLoc() != second.loc:
                 self.body[0].setDir(newDir)
 
-    def moveAlong(self, hitApple = False, grid = []):
+    def moveAlong(self, hitApple = False):
         first = self.body[0]
         if hitApple:
             self.body.insert(0,Segment("o",first.newLoc(),first.dir))
@@ -35,24 +35,14 @@ class Snake:
                     self.locations[i] = self.body[i].loc
             for i in range(len(self.body)-1, 0, -1):
                 self.body[i].setDir(self.body[i-1].dir)
-        self.validMove(grid)
+        self.validMove()
 
-    def validMove(self, grid = []):
+    def validMove(self):
         first = self.body[0]
         firstLoc = first.loc
         if firstLoc in self.locations[1:]:
             self.out = True
             self.body = []
-            return
-        elif len(grid) > 0:
-            if (firstLoc[1] > len(grid[0]) - 1 or firstLoc[1] < 0) or (firstLoc[0] > len(grid) - 1 or firstLoc[0] < 0):
-                self.out = True
-                self.body = []
-                return
-            if grid[firstLoc[0]][firstLoc[1]] not in ["A", "+"]:
-                self.out = True
-                self.body = []
-                return
     """
     def listLocations(self):
         output = []

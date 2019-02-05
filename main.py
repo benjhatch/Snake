@@ -10,8 +10,7 @@ keyHit = False
 #still need to fix minor bugs :(
 
 #change me...use wasd for first snake
-grid = Board(15,15,1,3,0) #rows, cols, number of apples
-#grid.makeSnakes(1,5) #number of snakes, length of snakes at start
+grid = Board(15,15,1,3,0) #rows, cols, number of snakes, length of snakes, number of apples
 #cool :)
 
 screen = pg.display.set_mode((grid.rows * 50, grid.cols * 50))
