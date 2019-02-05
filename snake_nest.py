@@ -10,7 +10,7 @@ class SnakeNest:
         self.snakeLocations = [snake.locations for snake in self.nest if not snake.out]
         self.apples = apples
 
-    def makeSnakes(self,numSnakes, length):
+    def makeSnakes(self,numSnakes, length): #need to update placement
         list = []
         for i in range(numSnakes):
             row = random.randint(length, self.rows - length)
@@ -34,25 +34,29 @@ class SnakeNest:
             return 3 #left
 
     def moveSnakes(self):
-        for i in range(len(self.nest)):
-            if not self.nest[i].out:
-                snake = self.nest[i]
-                snake.moveAlong(self.apples.snakeHitApple(snake))
-                self.snakeLocations[i] = snake.locations
-                self.checkOut(self.nest[i], i)
+        for i in range(len(self.nest)): #somewhat working, biased for second
+            if self.nest[i].out:
+                return
+            snake = self.nest[i]
+            snake.moveAlong(self.apples.snakeHitApple(snake))
+            self.snakeLocations[i] = snake.locations #this is the bias, make a new locations function
+            if self.checkOut(i):
+                self.nest.pop(i)
+                break
 
-    def checkOut(self, snake, index):
+    def checkOut(self, snakeIndex): #why is this not killing one snake when it hits another?
         out = False
+        snake = self.nest[snakeIndex]
         if len(snake.body) > 0:
             firstLoc = snake.body[0].loc
             if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
                 out = True
             else:
                 for i in range(len(self.snakeLocations)):
-                    if firstLoc == self.snakeLocations[i] and i != index:
+                    if firstLoc in self.snakeLocations[i] and i != snakeIndex:
                         out = True
         if out:
             snake.out = True
             snake.body = []
-            self.snakeLocations.pop(index)
-            return
+            self.snakeLocations.pop(snakeIndex)
+            return out

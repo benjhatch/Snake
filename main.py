@@ -10,7 +10,7 @@ keyHit = False
 #still need to fix minor bugs :(
 
 #change me...use wasd for first snake
-board = Board(15,15,1,3,1) #rows, cols, number of snakes, length of snakes, number of apples
+board = Board(15,15,1,4,1) #rows, cols, number of snakes, length of snakes, number of apples
 snakes = board.snakes
 #cool :)
 
