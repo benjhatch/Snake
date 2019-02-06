@@ -4,14 +4,14 @@ import pygame as pg
 timer = pg.time.Clock()
 run = True
 frameTimer = 0
-timeLimit = 130
+timeLimit = 120
 keyHit = False
 
 #change me...use wasd for first snake
-board = Board(15,15,50,1,4,1) #rows, cols, size, number of snakes, length of snakes, number of apples
-snakes = board.snakes
+board = Board(50,50,10,2,4,1) #rows, cols, size, number of snakes, length of snakes, number of apples
 #cool :)
 
+snakes = board.snakes
 screen = pg.display.set_mode((board.cols * board.size, board.rows * board.size))
 pg.init()
 
@@ -24,8 +24,8 @@ while run:
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 keyHit = True
-                snake = board.determineSnake(event.key)
-                keys = board.determineKeys(snake)
+                snake = board.determineSnake(event.key) #update this
+                keys = board.determineKeys(snake) #update this
                 if event.key == keys[0]:
                     snake.changeDir(0)
                     snakes.moveSnakes()

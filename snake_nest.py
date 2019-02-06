@@ -44,7 +44,8 @@ class SnakeNest:
 
     def checkOut(self, snakeIndex):
         if self.nest[snakeIndex].out:
-            return
+            self.snakeLocations.pop(snakeIndex)
+            self.nest.pop(snakeIndex)
         out = False
         snake = self.nest[snakeIndex]
         if len(snake.body) > 0:
@@ -69,8 +70,9 @@ class SnakeNest:
         for i in range(len(apples.appleTree)):
             if head == apples.appleLocations[i]:
                 snakeSegLocations = []
-                for i in range(len(self.snakeLocations)):
-                    snakeSegLocations += self.snakeLocations[i]
+                for j in range(len(self.snakeLocations)):
+                    snakeSegLocations += self.snakeLocations[j]
+                #print(i)
                 apples.appleTree[i].changeLoc(self.rows,self.columns,apples.appleLocations + snakeSegLocations)
                 apples.appleLocations[i] = apples.appleTree[i].loc
                 return True
