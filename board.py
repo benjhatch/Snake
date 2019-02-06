@@ -1,5 +1,3 @@
-from snake import Snake
-from segment import Segment
 from apple_tree import AppleTree
 from snake_nest import SnakeNest
 import pygame as pg
@@ -20,10 +18,7 @@ class Board:
             pg.draw.rect(screen, (255, 0, 0), ((apple.loc[1] * size) + 1, (apple.loc[0] * size) + 1, size-2, size-2))
         for i in range(len(self.snakes.nest)):
             for segment in self.snakes.nest[i].body:
-                if i == 0:
-                    color = (0, 255, 0)
-                else:
-                    color = (0, 0, 255)
+                color = (0, 255, 0)
                 pg.draw.rect(screen, color, ((segment.loc[1] * size) + 1, (segment.loc[0] * size) + 1, size-2, size-2))
         pg.display.update()
 

@@ -68,7 +68,10 @@ class SnakeNest:
         head = self.nest[index].body[0].loc
         for i in range(len(apples.appleTree)):
             if head == apples.appleLocations[i]:
-                apples.appleTree[i].changeLoc(self.rows,self.columns,apples.appleLocations + self.snakeLocations)
+                snakeSegLocations = []
+                for i in range(len(self.snakeLocations)):
+                    snakeSegLocations += self.snakeLocations[i]
+                apples.appleTree[i].changeLoc(self.rows,self.columns,apples.appleLocations + snakeSegLocations)
                 apples.appleLocations[i] = apples.appleTree[i].loc
                 return True
         return False

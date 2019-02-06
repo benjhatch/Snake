@@ -7,15 +7,12 @@ frameTimer = 0
 timeLimit = 130
 keyHit = False
 
-#still need to fix minor bugs :(
-#must make screen init flexible or else!!!
-
 #change me...use wasd for first snake
 board = Board(15,15,50,1,4,1) #rows, cols, size, number of snakes, length of snakes, number of apples
 snakes = board.snakes
 #cool :)
 
-screen = pg.display.set_mode((board.rows * board.size, board.cols * board.size))
+screen = pg.display.set_mode((board.cols * board.size, board.rows * board.size))
 pg.init()
 
 
