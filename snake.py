@@ -23,7 +23,6 @@ class Snake:
 
     def moveAlong(self, hitApple = False):
         if self.out:
-            self.body = []
             return
         first = self.body[0]
         if hitApple:
@@ -45,3 +44,4 @@ class Snake:
         firstLoc = first.loc
         if firstLoc in self.locations[1:]:
             self.out = True
+            self.body = []

@@ -51,12 +51,17 @@ class SnakeNest:
                 out = True
             else:
                 for i in range(len(self.snakeLocations)):
-                    if firstLoc in self.snakeLocations[i] and i != snakeIndex:
+                    if i == snakeIndex:
+                        continue
+                    elif firstLoc in self.snakeLocations[i]:
                         out = True
         if out:
             snake.out = True
+            snake.body = []
 
     def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
+        if self.nest[index].out:
+            return False
         apples = self.apples
         head = self.nest[index].body[0].loc
         for i in range(len(apples.appleTree)):
