@@ -4,7 +4,7 @@ import pygame as pg
 timer = pg.time.Clock()
 run = True
 frameTimer = 0
-timeLimit = 100
+timeLimit = 130
 keyHit = False
 
 #still need to fix minor bugs :(
