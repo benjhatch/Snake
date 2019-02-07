@@ -9,7 +9,7 @@ class Snake:
     def __repr__(self):
         output = ""
         for segment in self.body:
-            output += segment.symbol + segment.__repr__() + str(segment.dir) + "*"
+            output += "S" + segment.__repr__() + str(segment.dir) + "*"
         return output
 
     def changeDir(self,newDir):
