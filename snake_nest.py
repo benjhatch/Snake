@@ -21,7 +21,6 @@ class SnakeNest:
             else:
                 dir = self.setDir(possibleLoc[1])  # gives the column the snake head is in, may consider revising
                 dic[i] = Snake([Segment(possibleLoc, dir)])
-                print(dic[i].body)
                 self.segmentLoc[possibleLoc] = dic[i].body[0].loc
                 for j in range(length-1):
                     nextLoc = dic[i].body[j].priorLoc()
@@ -75,11 +74,7 @@ class SnakeNest:
             return False
         apples = self.apples
         head = (self.nest[index].body[0].loc[0],self.nest[index].body[0].loc[1])
-        print(self.nest[index].body)
-        print(head)
         if head in apples.tree:
-            #print(head)
-            print(apples.tree)
             loc = apples.tree[head].changeLoc(self.rows,self.columns,apples.tree)
             apples.tree[loc] = apples.tree.pop(head)
             return True
