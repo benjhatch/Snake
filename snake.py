@@ -26,21 +26,32 @@ class Snake:
     def moveAlong(self, hitApple = False):
         if self.out:
             return
-        before = len(self.locations)
         first = self.body[0]
         if hitApple:
-            self.body.insert(0,Segment(first.newLoc(),first.dir))
-            self.locations[self.body[0].loc] = self.body[0]
-        else:
-            self.locations = {}
-            for i in range(len(self.body)-1, -1, -1):
-                self.body[i].moveSeg()
-                if i != 0:
-                    self.body[i].setDir(self.body[i-1].dir)
-                self.locations[self.body[i].loc] = self.body[i]
-                #self.validMove(before)
+            self.addHead(first)
+            return
+        self.locations = {}
+        self.continueMoving()
 
-    def validMove(self,before):
-        if len(self.locations) != before:
+    def validMove(self):
+        if self.body[0].loc in self.locations:
             self.out = True
             self.body = []
+            self.locations = {}
+            return False
+        return True
+
+    def addHead(self,first):
+        self.body.insert(0, Segment(first.newLoc(), first.dir))
+        if self.validMove():
+            self.locations[self.body[0].loc] = self.body[0]
+
+    def continueMoving(self):
+        for i in range(len(self.body)-1, -1, -1): #back to front
+            self.body[i].moveSeg()
+            if i == 0:
+                if not self.validMove():
+                    return
+            else:
+                self.body[i].setDir(self.body[i-1].dir)
+            self.locations[self.body[i].loc] = self.body[i]

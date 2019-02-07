@@ -51,8 +51,7 @@ class SnakeNest:
 
     def checkOut(self, snakeIndex):
         if self.nest[snakeIndex].out:
-            self.snakeLocations.pop(snakeIndex)
-            self.nest.pop(snakeIndex)
+            return
         out = False
         snake = self.nest[snakeIndex]
         if len(snake.body) > 0:
