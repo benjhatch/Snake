@@ -28,19 +28,19 @@ while run:
                 keys = board.determineKeys(snake) #update this
                 if event.key == keys[0]:
                     snake.changeDir(0)
-                    snakes.moveSnakes()
+                    snakes.advance()
                 elif event.key == keys[1]:
                     snake.changeDir(1)
-                    snakes.moveSnakes()
+                    snakes.advance()
                 elif event.key == keys[2]:
                     snake.changeDir(2)
-                    snakes.moveSnakes()
+                    snakes.advance()
                 elif event.key == keys[3]:
                     snake.changeDir(3)
-                    snakes.moveSnakes()
+                    snakes.advance()
             if event.type == pg.QUIT:
                 run = False
         if not keyHit:
-            snakes.moveSnakes()
+            snakes.advance()
         keyHit = False
         board.displayGame(screen)

@@ -16,9 +16,9 @@ class Board:
         size = self.size
         for apple in self.apples.tree.values():
             pg.draw.rect(screen, (255, 0, 0), ((apple.loc[1] * size) + 1, (apple.loc[0] * size) + 1, size-2, size-2))
-        for segment in self.snakes.segmentLoc.values(): #fix
+        for key in self.snakes.segmentLoc:
             color = (0, 255, 0)
-            pg.draw.rect(screen, color, ((segment[1] * size) + 1, (segment[0] * size) + 1, size-2, size-2))
+            pg.draw.rect(screen, color, ((key[1] * size) + 1, (key[0] * size) + 1, size-2, size-2))
         pg.display.update()
 
     def determineSnake(self,key): #still needs work

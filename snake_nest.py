@@ -16,16 +16,16 @@ class SnakeNest:
             row = random.randint(length, self.rows - length)
             col = random.randint(length, self.columns - length)
             possibleLoc = (row,col)
-            if possibleLoc in dic:
+            if possibleLoc in self.segmentLoc:
                 i -= 1
             else:
                 dir = self.setDir(possibleLoc[1])  # gives the column the snake head is in, may consider revising
-                dic[possibleLoc] = Snake([Segment(possibleLoc, dir)])
-                self.segmentLoc[possibleLoc] = dic[possibleLoc].body[0].loc
-                for j in range(length-1):
-                    nextLoc = dic[possibleLoc].body[j].priorLoc()
-                    dic[possibleLoc].body.append(Segment(nextLoc,dir))
-                    self.segmentLoc[nextLoc] = dic[possibleLoc].body[j+1].loc
+                dic[i] = Snake([Segment(possibleLoc, dir)])
+                self.segmentLoc[possibleLoc] = dic[i].body[0].loc
+                for j in range(length):
+                    nextLoc = dic[i].body[j].priorLoc()
+                    dic[i].body.append(Segment(nextLoc,dir))
+                    self.segmentLoc[nextLoc] = dic[i].body[j+1].loc
         return dic
 
     def setDir(self,col):
@@ -35,15 +35,19 @@ class SnakeNest:
         else:
             return 3 #left
 
+    def advance(self):
+        self.segmentLoc = {}
+        self.moveSnakes()
+
     def moveSnakes(self, index = 0):
-        keys = list(self.nest.keys())
         if index == len(self.nest) - 1:
-            self.nest[keys[index]].moveAlong(self.snakeHitApple(keys[index]))
+            self.nest[index].moveAlong(self.snakeHitApple(index))
             #self.checkOut(index)
         else:
-            self.nest[keys[index]].moveAlong(self.snakeHitApple(keys[index]))
+            self.nest[index].moveAlong(self.snakeHitApple(index))
             self.moveSnakes(index + 1)
             #self.checkOut(index)
+        self.segmentLoc.update(self.nest[index].locations)
 
     def checkOut(self, snakeIndex):
         if self.nest[snakeIndex].out:
@@ -65,11 +69,11 @@ class SnakeNest:
             snake.out = True
             snake.body = []
 
-    def snakeHitApple(self, key): #may need to update placement of apple upon hit and error thrown
-        if self.nest[key].out:
+    def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
+        if self.nest[index].out:
             return False
         apples = self.apples
-        head = (self.nest[key].body[0].loc[0],self.nest[key].body[0].loc[1])
+        head = (self.nest[index].body[0].loc[0],self.nest[index].body[0].loc[1])
         if head in apples.tree:
             loc = apples.tree[head].changeLoc(self.rows,self.columns,apples.tree)
             apples.tree[loc] = apples.tree.pop(head)

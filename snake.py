@@ -4,7 +4,9 @@ class Snake:
     def __init__(self,body=[],out = False):
         self.body = body
         self.out = out
-        self.locations = [seg.loc for seg in body]
+        self.locations = {}
+        for seg in self.body:
+            self.locations[seg.loc] = seg
 
     def __repr__(self):
         output = ""
@@ -15,33 +17,29 @@ class Snake:
     def changeDir(self,newDir):
         if not self.out:
             firstSeg = self.body[0]
-            first = Segment("S",firstSeg.loc,firstSeg.dir) #simulation, what will happen?
+            first = Segment(firstSeg.loc,firstSeg.dir) #simulation, what will happen?
             first.setDir(newDir)
             second = self.body[1]
             if first.newLoc() != second.loc:
                 self.body[0].setDir(newDir)
 
     def moveAlong(self, hitApple = False):
+        self.locations = {}
         if self.out:
             return
+        before = len(self.locations)
         first = self.body[0]
         if hitApple:
-            self.body.insert(0,Segment("o",first.newLoc(),first.dir))
-            self.locations.insert(0, self.body[0].loc)
+            self.body.insert(0,Segment(first.newLoc(),first.dir))
+            self.locations[self.body[0].loc] = self.body[0]
         else:
-            for i in range(len(self.body)):
-                self.body[i].moveSeg()
-                if i > len(self.locations) - 1:
-                    self.locations.insert(i,self.body[i].loc)
-                else:
-                    self.locations[i] = self.body[i].loc
             for i in range(len(self.body)-1, 0, -1):
+                self.body[i].moveSeg()
                 self.body[i].setDir(self.body[i-1].dir)
-        self.validMove()
+                self.locations[self.body[i].loc] = self.body[i]
+        self.validMove(before)
 
-    def validMove(self):
-        first = self.body[0]
-        firstLoc = first.loc
-        if firstLoc in self.locations[1:]:
+    def validMove(self,before):
+        if len(self.locations) == before:
             self.out = True
             self.body = []
