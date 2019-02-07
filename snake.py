@@ -37,9 +37,10 @@ class Snake:
                 self.body[i].moveSeg()
                 self.body[i].setDir(self.body[i-1].dir)
                 self.locations[self.body[i].loc] = self.body[i]
-        self.validMove(before)
+                #self.validMove(before)
+            #print(self.body)
 
     def validMove(self,before):
-        if len(self.locations) == before:
+        if len(self.locations) != before:
             self.out = True
             self.body = []
