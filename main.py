@@ -8,7 +8,7 @@ timeLimit = 120
 keyHit = False
 
 #change me...use wasd for first snake
-board = Board(30,30,10,1,4,1) #rows, cols, size, number of snakes, length of snakes, number of apples
+board = Board(30,30,10,2,4,1) #rows, cols, size, number of snakes, length of snakes, number of apples
 #cool :)
 
 snakes = board.snakes

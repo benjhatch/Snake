@@ -42,11 +42,10 @@ class SnakeNest:
     def moveSnakes(self, index = 0):
         if index == len(self.nest) - 1:
             self.nest[index].moveAlong(self.snakeHitApple(index))
-            #self.checkOut(index)
         else:
             self.nest[index].moveAlong(self.snakeHitApple(index))
             self.moveSnakes(index + 1)
-            #self.checkOut(index)
+        self.checkOut(index)
         self.segmentLoc.update(self.nest[index].locations)
 
     def checkOut(self, snakeIndex):
@@ -58,15 +57,12 @@ class SnakeNest:
             firstLoc = snake.body[0].loc
             if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
                 out = True
-            else:
-                for i in range(len(self.snakeLocations)):
-                    if i == snakeIndex:
-                        continue
-                    elif firstLoc in self.snakeLocations[i]:
-                        out = True
+            elif firstLoc in self.segmentLoc:
+                out = True
         if out:
             snake.out = True
             snake.body = []
+            snake.locations = {}
 
     def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
         if self.nest[index].out:
@@ -78,27 +74,3 @@ class SnakeNest:
             apples.tree[loc] = apples.tree.pop(head)
             return True
         return False
-
-"""
-        self.rows = rows
-        self.columns = columns
-        self.nest = self.makeSnakes(numSnakes, length)
-        self.snakeLocations = [snake.locations for snake in self.nest if not snake.out]
-        self.apples = apples
-        
-        
-        list = []
-        for i in range(numSnakes):
-            row = random.randint(length, self.rows - length)
-            col = random.randint(length, self.columns - length)
-            possibleLoc = [row,col]
-            if possibleLoc in list:
-                i -= 1
-            else:
-                dir = self.setDir(possibleLoc[1]) #gives the column the snake head is in, may consider revising
-                list.append(Snake([Segment(possibleLoc,dir)]))
-                for j in range(length-1):
-                    possibleLoc = list[i].body[j].priorLoc()
-                    list[i].body.append(Segment(possibleLoc,dir))
-        return list
-"""
