@@ -9,6 +9,8 @@ class Board:
         self.size = size
         self.apples = AppleTree(apples, rows, cols)
         self.snakes = SnakeNest(numSnakes, lengthSnake, rows, cols, self.apples)
+        self.keys = {pg.K_w: (0,0), pg.K_d: (0,1), pg.K_s: (0,2), pg.K_a: (0,3), pg.K_UP: (1,0),
+                     pg.K_RIGHT: (1,1), pg.K_DOWN: (1,2), pg.K_LEFT: (1,3)}
 
 
     def displayGame(self,screen):
@@ -20,20 +22,3 @@ class Board:
             color = (0, 255, 0)
             pg.draw.rect(screen, color, ((key[1] * size) + 1, (key[0] * size) + 1, size-2, size-2))
         pg.display.update()
-
-    def determineSnake(self,key): #still needs work
-        if key in [pg.K_w,pg.K_a,pg.K_s,pg.K_d]:
-            return self.snakes.nest[0]
-        else:
-            if len(self.snakes.nest) > 1:
-                return self.snakes.nest[1]
-
-    def determineKeys(self,snake): #needs updating
-        index = -1
-        for i in range(len(self.snakes.nest)):
-            if self.snakes.nest[i] == snake:
-                index = i
-        if index == 0:
-            return [pg.K_w,pg.K_d,pg.K_s,pg.K_a]
-        else:
-            return [pg.K_UP,pg.K_RIGHT,pg.K_DOWN,pg.K_LEFT]

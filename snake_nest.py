@@ -39,30 +39,37 @@ class SnakeNest:
         self.segmentLoc = {}
         self.moveSnakes()
 
-    def moveSnakes(self, index = 0):
-        if index == len(self.nest) - 1:
-            self.nest[index].moveAlong(self.snakeHitApple(index))
+
+    def moveSnakes(self,index = 0):
+        snake = self.nest[index]
+        if index == len(self.nest) -1:
+            snake.moveAlong(self.snakeHitApple(index))
+            self.segmentLoc.update(snake.locations)
+            #self.checkOut(index)
         else:
-            self.nest[index].moveAlong(self.snakeHitApple(index))
+            snake.moveAlong(self.snakeHitApple(index))
+            self.segmentLoc.update(snake.locations)
             self.moveSnakes(index + 1)
-        self.checkOut(index)
-        self.segmentLoc.update(self.nest[index].locations)
+            #self.checkOut(index)
 
     def checkOut(self, snakeIndex):
-        if self.nest[snakeIndex].out:
-            return
-        out = False
         snake = self.nest[snakeIndex]
+        if snake.out:
+            return
         if len(snake.body) > 0:
-            firstLoc = snake.body[0].loc
+            firstLoc = snake.body[0].newLoc()
             if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
-                out = True
+                self.clear(snake)
+                return
             elif firstLoc in self.segmentLoc:
-                out = True
-        if out:
-            snake.out = True
-            snake.body = []
-            snake.locations = {}
+                self.clear(snake)
+                return
+        self.segmentLoc.update(snake.locations)
+
+    def clear(self, snake):
+        snake.out = True
+        snake.body = []
+        snake.locations = {}
 
     def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
         if self.nest[index].out:
@@ -74,3 +81,17 @@ class SnakeNest:
             apples.tree[loc] = apples.tree.pop(head)
             return True
         return False
+"""
+        snake = self.nest[snakeIndex]
+        if snake.out:
+            return
+        if len(snake.body) > 0:
+            firstLoc = snake.body[0].newLoc()
+            if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
+                self.clear(snake)
+                return
+            elif firstLoc in self.segmentLoc:
+                self.clear(snake)
+                return
+        self.segmentLoc.update(snake.locations)
+"""
