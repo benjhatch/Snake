@@ -16,9 +16,10 @@ class Board:
     def displayGame(self,screen):
         screen.fill((0,0,0))
         size = self.size
+        color = (0, 255, 0)
         for apple in self.apples.tree.values():
             pg.draw.rect(screen, (255, 0, 0), ((apple.loc[1] * size) + 1, (apple.loc[0] * size) + 1, size-2, size-2))
-        for key in self.snakes.segmentLoc:
-            color = (0, 255, 0)
-            pg.draw.rect(screen, color, ((key[1] * size) + 1, (key[0] * size) + 1, size-2, size-2))
+        for i in range(len(self.snakes.segmentLoc)):
+            for key in self.snakes.segmentLoc[i]:
+                pg.draw.rect(screen, color, ((key[1] * size) + 1, (key[0] * size) + 1, size-2, size-2))
         pg.display.update()

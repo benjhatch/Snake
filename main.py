@@ -4,11 +4,11 @@ import pygame as pg
 timer = pg.time.Clock()
 run = True
 frameTimer = 0
-timeLimit = 250
+timeLimit = 120
 keyHit = False
 
 #change me...use wasd for first snake
-board = Board(40,40,20,1,6,1) #rows, cols, size, number of snakes, length of snakes, number of apples
+board = Board(40,40,20,2,6,6) #rows, cols, size, number of snakes, length of snakes, number of apples
 #cool :)
 
 snakes = board.snakes

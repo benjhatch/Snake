@@ -11,7 +11,7 @@ class SnakeNest:
         self.apples = apples
 
     def makeSnakes(self,numSnakes, length): #need to update placement
-        dic = {}
+        list = []
         for i in range(numSnakes):
             row = random.randint(length, self.rows - length)
             col = random.randint(length, self.columns - length)
@@ -20,13 +20,12 @@ class SnakeNest:
                 i -= 1
             else:
                 dir = self.setDir(possibleLoc[1])  # gives the column the snake head is in, may consider revising
-                dic[i] = Snake([Segment(possibleLoc, dir)])
-                self.segmentLoc[possibleLoc] = dic[i].body[0].loc
+                list.append(Snake([Segment(possibleLoc, dir)]))
                 for j in range(length-1):
-                    nextLoc = dic[i].body[j].priorLoc()
-                    dic[i].body.append(Segment(nextLoc,dir))
-                    self.segmentLoc[nextLoc] = dic[i].body[j+1].loc
-        return dic
+                    nextLoc = list[i].body[j].priorLoc()
+                    list[i].body.append(Segment(nextLoc,dir))
+            self.segmentLoc[i] = list[i].locations
+        return list
 
     def setDir(self,col):
         middle = self.columns // 2
@@ -35,63 +34,44 @@ class SnakeNest:
         else:
             return 3 #left
 
-    def advance(self):
-        self.segmentLoc = {}
-        self.moveSnakes()
-
-
-    def moveSnakes(self,index = 0):
-        snake = self.nest[index]
-        if index == len(self.nest) -1:
-            snake.moveAlong(self.snakeHitApple(index))
-            self.segmentLoc.update(snake.locations)
-            #self.checkOut(index)
+    def advance(self,i = 0):
+        snake = self.nest[i]
+        if i == len(self.nest) -1:
+            snake.moveAlong(self.snakeHitApple(i))
+            self.segmentLoc[i] = snake.locations
         else:
-            snake.moveAlong(self.snakeHitApple(index))
-            self.segmentLoc.update(snake.locations)
-            self.moveSnakes(index + 1)
-            #self.checkOut(index)
+            snake.moveAlong(self.snakeHitApple(i))
+            self.segmentLoc[i] = snake.locations
+            self.advance(i + 1)
+        self.checkOut(i)
 
     def checkOut(self, snakeIndex):
         snake = self.nest[snakeIndex]
         if snake.out:
             return
         if len(snake.body) > 0:
-            firstLoc = snake.body[0].newLoc()
+            firstLoc = snake.body[0].loc
             if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
                 self.clear(snake)
                 return
-            elif firstLoc in self.segmentLoc:
-                self.clear(snake)
-                return
-        self.segmentLoc.update(snake.locations)
+            else:
+                for i in range(len(self.nest)):
+                    if i != snakeIndex and firstLoc in self.segmentLoc[i]:
+                        self.clear(snake)
+                        return
 
     def clear(self, snake):
         snake.out = True
         snake.body = []
         snake.locations = {}
 
-    def snakeHitApple(self, index): #may need to update placement of apple upon hit and error thrown
-        if self.nest[index].out:
+    def snakeHitApple(self, i): #may need to update placement of apple upon hit and error thrown
+        if self.nest[i].out:
             return False
         apples = self.apples
-        head = (self.nest[index].body[0].loc[0],self.nest[index].body[0].loc[1])
+        head = (self.nest[i].body[0].loc[0],self.nest[i].body[0].loc[1])
         if head in apples.tree:
             loc = apples.tree[head].changeLoc(self.rows,self.columns,apples.tree)
             apples.tree[loc] = apples.tree.pop(head)
             return True
         return False
-"""
-        snake = self.nest[snakeIndex]
-        if snake.out:
-            return
-        if len(snake.body) > 0:
-            firstLoc = snake.body[0].newLoc()
-            if (firstLoc[1] > self.columns - 1 or firstLoc[1] < 0) or (firstLoc[0] > self.columns - 1 or firstLoc[0] < 0):
-                self.clear(snake)
-                return
-            elif firstLoc in self.segmentLoc:
-                self.clear(snake)
-                return
-        self.segmentLoc.update(snake.locations)
-"""
