@@ -1,4 +1,4 @@
-from board import Board
+from jungle import Jungle
 import pygame as pg
 
 timer = pg.time.Clock()
@@ -8,29 +8,25 @@ timeLimit = 120
 keyHit = False
 
 #change me...use wasd for first snake
-board = Board(40,40,20,2,6,6) #rows, cols, size, number of snakes, length of snakes, number of apples
-#cool :)
-
-snakes = board.snakes
-screen = pg.display.set_mode((board.cols * board.size, board.rows * board.size))
+jungle = Jungle(20,20,10,1,6) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
 pg.init()
-
 
 while run:
     timer.tick()
     frameTimer += timer.get_rawtime()
     if frameTimer > timeLimit:
         frameTimer = 0
+        jungle.screen.fill((0, 0, 0))
         for event in pg.event.get():
-            if event.type == pg.KEYDOWN and event.key in board.keys:
+            if event.type == pg.KEYDOWN and event.key in jungle.keys:
                 keyHit = True
-                tuple = board.keys[event.key]
-                snake = snakes.nest[tuple[0]]
+                tuple = jungle.keys[event.key]
+                snake = jungle.snakes[tuple[0]]
                 snake.changeDir(tuple[1])
-                snakes.advance()
+                jungle.moveSnakes()
             if event.type == pg.QUIT:
                 run = False
         if not keyHit:
-            snakes.advance()
+            jungle.moveSnakes()
         keyHit = False
-        board.displayGame(screen)
+        pg.display.update()
