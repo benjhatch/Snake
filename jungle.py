@@ -9,23 +9,20 @@ class Jungle:
         self.blockSize = blockSize
         self.colorList = [(0,255,0),(0,0,255)]
         self.screen = pg.display.set_mode((self.cols * self.blockSize, self.rows * self.blockSize))
+        self.allSnakeLocations = set()
         self.snakes = self.initSnakes(snakeCount, snakeLength)
         self.keys = {pg.K_w: (0, 0), pg.K_d: (0, 1), pg.K_s: (0, 2), pg.K_a: (0, 3), pg.K_UP: (1, 0),
                      pg.K_RIGHT: (1, 1), pg.K_DOWN: (1, 2), pg.K_LEFT: (1, 3)}
 
     #JUNGLE IN ACTION
     def moveSnakes(self):
-        # need to make list that tracks all snake locations (dictionary)
-        #need to look at way snake handles out for this to work
-        #before = len(all snake locations)
-        #if len(before) > 0:
-        if len(self.snakes) > 0:
-            i = 0
-            while i < len(self.snakes):
-                #maybe if not out?
-                self.snakes[i].moveAlong()
-                i+=1
-        #if len(all snake locations) < before
+        size = len(self.snakes)
+        i = 0
+        snakeTotal = 0
+        while i < size:
+            snakeTotal += self.snakes[i].moveAlong()
+            i+=1
+        #if len(all snake locations) < snakeTotal
         #traverse snakes
             #if snakeHead is in snake before
                 #that snake is out
@@ -38,10 +35,12 @@ class Jungle:
             row = random.randint(length, self.rows - 1)
             col = self.placeFirstPeice(length)
             dir = self.initDir(col)
-            snakes.append(Snake(self.screen, self.blockSize, [Segment((row, col), dir)], self.rows, self.cols, self.colorList[i]))
+            snakes.append(Snake(self.screen, self.blockSize, self.allSnakeLocations, [Segment((row, col), dir)], self.rows, self.cols, self.colorList[i]))
+            self.allSnakeLocations.add((row,col))
             for j in range(length - 1):  # adding on rest of segments
                 nextLocation = snakes[i].body[j].priorLoc()
                 snakes[i].body.append(Segment(nextLocation, dir))
+                self.allSnakeLocations.add(nextLocation)
         return snakes
 
     def placeFirstPeice(self, length):
@@ -49,7 +48,6 @@ class Jungle:
             return 0 + length
         else:
             out = random.randint(length-1, self.cols - length)
-            print(out)
             return out
 
     def initDir(self, col):
