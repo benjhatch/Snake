@@ -2,12 +2,12 @@ from segment import Segment
 import pygame as pg
 
 class Snake:
-    def __init__(self, screen, size, body=[], rows = 15, cols = 15, out = False):
+    def __init__(self, screen, size, body=[], rows=15, cols=15, color=(0,255,0), out=False):
         self.screen = screen
         self.size = size
         self.rows = rows - 1
         self.cols = cols - 1
-        self.color = (0,255,0)
+        self.color = color
         self.body = body
         self.out = out
         self.locations = {}
