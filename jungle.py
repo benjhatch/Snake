@@ -9,7 +9,7 @@ class Jungle:
         self.blockSize = blockSize
         self.colorList = [(0,255,0),(0,0,255)]
         self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
-        self.snakeLocations = set() #keeps track of all snake locations in one list
+        self.allSnakeLocations = set() #keeps track of all snake locations in one list
         self.snakes = self.initSnakes(snakeCount, snakeLength)
         self.keys = {pg.K_w: (0, 0), pg.K_d: (0, 1), pg.K_s: (0, 2), pg.K_a: (0, 3), pg.K_UP: (1, 0),
                      pg.K_RIGHT: (1, 1), pg.K_DOWN: (1, 2), pg.K_LEFT: (1, 3)}
@@ -17,14 +17,13 @@ class Jungle:
     #JUNGLE IN ACTION
     def moveSnakes(self):
         size = len(self.snakes)
-        self.snakeLocations.clear()
-        #remove = 0
+        self.allSnakeLocations.clear()
         i = 0
-        totalSnakeLength = 0
+        lengthOfAllSnakes = 0
         while i < size:
-            totalSnakeLength += self.snakes[i].moveAlong()
+            lengthOfAllSnakes += self.snakes[i].moveAlong()
             i+=1
-        if len(self.snakeLocations) < totalSnakeLength:
+        if len(self.allSnakeLocations) < lengthOfAllSnakes:
             print("hit")
             #for i in range(len(self.snakes)):
                 #if snakeHead is in snake before
@@ -38,7 +37,7 @@ class Jungle:
             row = random.randint(length, self.rows - 1)
             col = self.placeFirstPeice(length)
             dir = self.initDir(col)
-            snakes.append(Snake(self.screen, self.blockSize, self.snakeLocations, [Segment((row, col), dir)], self.rows, self.cols, self.colorList[i]))
+            snakes.append(Snake(self.screen, self.blockSize, self.allSnakeLocations, [Segment((row, col), dir)], self.rows, self.cols, self.colorList[i]))
             for j in range(length - 1):  # adding on rest of segments
                 nextLocation = snakes[i].body[j].priorLoc(dir)
                 snakes[i].body.append(Segment(nextLocation, dir))
