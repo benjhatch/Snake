@@ -11,9 +11,9 @@ class Snake:
         self.color = color
         self.body = body
         self.out = out
-        self.locations = {}
+        self.ownLocations = {}
         for seg in self.body:
-            self.locations[seg.loc] = seg
+            self.ownLocations[seg.loc] = seg
 
     def __repr__(self):
         output = ""
@@ -21,27 +21,29 @@ class Snake:
             output += "S" + segment.__repr__() + str(segment.dir) + "*"
         return output
 
+    #change snake direction
     def changeDir(self,newDir):
         if not self.out:
             first = self.body[0]
-            dir = first.dir
-            first.setDir(newDir)
-            second = self.body[1]
-            if first.newLoc() != second.loc:
-                self.body[0].setDir(newDir)
-                return
-            first.setDir(dir)
+            if first.newLoc(newDir) != self.body[1].loc:
+                first.setDir(newDir)
 
+    #draw snake
+    def draw(self, segment):
+        size = self.size
+        pg.draw.rect(self.screen, self.color,((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
+
+
+    #MOVING THE SNAKE
     def moveAlong(self, hitApple = False):
         if self.out:
-            return
-        lengthOfSnake = 0
+            self.clear()
+            return 0
         first = self.body[0]
         if hitApple:
             self.addHead(first)
-        self.locations = {}
-        lengthOfSnake = self.moveBody(hitApple)
-        return lengthOfSnake
+        self.ownLocations = {}
+        return self.moveBody(hitApple)
 
 
     def moveBody(self, hitApple = False):
@@ -52,35 +54,37 @@ class Snake:
                 segment.moveSeg()
             if i == 0:
                 if not self.validMove():
-                    return
+                    return 0
             else:
                 segment.setDir(self.body[i-1].dir)
-            self.locations[segment.loc] = segment
-            self.allSnakeLocations.add(segment.loc)
-            size = self.size
-            pg.draw.rect(self.screen, self.color, ((segment.loc[1] * size) + 1, (segment.loc[0] * size) + 1, size - 2, size - 2))
+            self.ownLocations[segment.loc] = segment
+            self.allSnakeLocations.add(segment.loc) #adding location to jungle
+            self.draw(segment)
             lengthOfSnake += 1
         return lengthOfSnake
 
     def validMove(self):
         firstSeg = self.body[0].loc
-        if firstSeg in self.locations:
+        if firstSeg in self.ownLocations:
             self.clear()
             return False
-        elif firstSeg[0] < 0 or firstSeg[1] < 0 or firstSeg[0] > self.rows or firstSeg[1] > self.cols:
+        elif firstSeg[0] == 0 or firstSeg[1] == 0 or firstSeg[0] == self.rows or firstSeg[1] == self.cols:
+            print("out")
             self.clear()
             return False
         return True
 
     def clear(self):
         self.out = True
+        for i in range(len(self.body)): #maybe don't discard first, idk
+            self.allSnakeLocations.discard(self.body[i].loc)
         self.body = []
-        self.locations = {}
+        self.ownLocations = {}
+
 
     def addHead(self,first):
         body = self.body
-        body.insert(0, Segment(first.newLoc(), first.dir))
+        body.insert(0, Segment(first.newLoc(first.dir), first.dir))
         if self.validMove():
-            self.locations[body[0].loc] = body[0]
-            pg.draw.rect(self.screen, self.color, ((body[0].loc[1] * self.size) + 1, (body[0].loc[0] * self.size) + 1, self.size - 2, self.size - 2))
-
+            self.ownLocations[body[0].loc] = body[0]
+            self.draw(body[0])

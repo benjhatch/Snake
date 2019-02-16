@@ -4,11 +4,11 @@ import pygame as pg
 timer = pg.time.Clock()
 run = True
 frameTimer = 0
-timeLimit = 120
+timeLimit = 1200
 keyHit = False
 
 #change me...use wasd for first snake
-jungle = Jungle(20,20,10,1,5) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
+jungle = Jungle(30,30,20,2,5) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
 pg.init()
 
 while run:
