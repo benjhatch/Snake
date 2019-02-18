@@ -8,7 +8,7 @@ timeLimit = 100
 keyHit = False
 
 #change me...use wasd for first snake
-jungle = Jungle(50, 50, 10, 1, 25) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
+jungle = Jungle(50, 50, 10, 1, 6) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
 pg.init()
 
 while run:

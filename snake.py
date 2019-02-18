@@ -70,7 +70,6 @@ class Snake:
             self.draw(body[0])
             for i in range(1, len(body)):
                 self.draw(body[i])
-        #print(len(self.body))
         return len(self.body)
 
     #CHECKING VALIDITY OF SNAKE
@@ -86,7 +85,7 @@ class Snake:
         return True
 
     def outOfBounds(self,loc):
-        if loc[0] == 0 or loc[1] == 0 or loc[0] == self.rows or loc[1] == self.cols:
+        if loc[0] == -1 or loc[1] == -1 or loc[0] == self.rows or loc[1] == self.cols:
             return True
         return False
 
