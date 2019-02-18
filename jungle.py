@@ -7,7 +7,7 @@ class Jungle:
         self.rows = rows
         self.cols = cols
         self.blockSize = blockSize
-        self.colorList = [(0,255,0),(0,0,255)]
+        self.colorList = [(0,255,0),(0,0,255),(255,255,255),(100,100,150)]
         self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
         self.allSnakeLocations = set() #keeps track of all snake locations in one list
         self.snakes = self.initSnakes(snakeCount, snakeLength)

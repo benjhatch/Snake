@@ -32,50 +32,54 @@ class Snake:
                 first.setDir(newDir)
 
     #draw and update segment on screen and in lists
-    def draw(self, segment):
+    def draw(self, segment, first = False):
         size = self.size
         pg.draw.rect(self.screen, self.color,((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
-        self.allSnakeLocations.add(segment.loc)
+        if not first:
+            self.allSnakeLocations.add(segment.loc) #once you draw the segment, add its location to allSnakeLocations
 
 
     #MOVING THE SNAKE
-    def moveAlong(self, hitApple = False):
-        if self.out:
+    def moveAlong(self, hitApple = False): #determines course of action when moveSnakes() is called in jungle
+        if self.out: #move to next snake
             return 0
         first = self.body[0]
-        if hitApple:
-            return self.addHead(first)
-        else:
+        if hitApple: #snake has hit the apple
+            return self.addHead(first) #return length of snake
+        else: #if it doesn't hit the apple, move all the segments
             self.ownLocations = {}
-            return self.moveBody()
+            return self.moveBody() #return length of snake
 
-    def moveBody(self):
+    def moveBody(self): #moves all segments and returns length of snake
+        #just for the first segment, detecting out of bounds first
         firstSegment = self.body[0]
-        firstSegment.moveSeg()  # just for the first
+        firstSegment.moveSeg()
         if self.outOfBounds():
             self.clear()
             return 0
         else:
-            self.draw(firstSegment)
-        for i in range(len(self.body) - 1, 0, -1):  # back to front excluding the snake head
+            self.draw(firstSegment, True) #first segment doesn't get added to all Snake locations
+        #rest of snake segments excluding the snake head
+        for i in range(len(self.body) - 1, 0, -1):  # back to front
             segment = self.body[i]
             segment.moveSeg()
             segment.setDir(self.body[i - 1].dir)
             self.draw(segment)
             self.ownLocations[segment.loc] = segment
+        #check if snake head is in its own body
         if not self.validMove():
             return 0
-        return len(self.body)
+        return len(self.body) - 1 #bc snake head isn't included
 
-    def addHead(self,first):
+    def addHead(self,first): #add segment onto front of snake when it hits an apple
         body = self.body
-        body.insert(0, Segment(first.newLoc(first.dir), first.dir))
+        body.insert(0, Segment(first.newLoc(first.dir), first.dir)) #insert segment at front of snake
         if self.validMove():
-            self.draw(body[0])
-            for i in range(1, len(body)):
+            self.draw(body[0], True) #first segment doesn't get added to all snake locations
+            for i in range(1, len(body)): #draw rest of snake body after you draw the head
                 self.draw(body[i])
                 self.ownLocations[body[i].loc] = body[i]
-        return len(self.body)
+        return len(self.body) - 1 #bc snake head isn't included
 
     #CHECKING VALIDITY OF SNAKE
     def validMove(self):
@@ -95,7 +99,7 @@ class Snake:
             return True
         return False
 
-    def clear(self):
+    def clear(self): #'delete' the snake from the game
         self.out = True
         for i in range(len(self.body)): #maybe don't discard first, idk
             self.allSnakeLocations.discard(self.body[i].loc)
