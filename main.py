@@ -4,11 +4,11 @@ import time
 
 timer = pg.time.Clock()
 run = True
-timeLimit = 300
+timeLimit = 5000
 keyHit = False
 
 #change me...use wasd for first snake
-jungle = Jungle(40, 40, 10, 2, 10) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
+jungle = Jungle(50, 50, 10, 3, 10) #rows, cols, size, number of snakes, length of snakes, ?number of apples?
 pg.init()
 
 while run:
@@ -20,6 +20,8 @@ while run:
             snake.changeDir(tuple[1])
         if event.type == pg.QUIT:
             run = False
-    jungle.moveSnakes()
+    if not jungle.hit:
+        jungle.moveSnakes()
+    jungle.hit = False
     pg.display.update()
     time.sleep(timeLimit / 5000)

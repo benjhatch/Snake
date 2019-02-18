@@ -35,8 +35,9 @@ class Snake:
     def draw(self, segment, first = False):
         size = self.size
         pg.draw.rect(self.screen, self.color,((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
+        self.allSnakeLocations.add(segment.loc) #once you draw the segment, add its location to allSnakeLocations
         if not first:
-            self.allSnakeLocations.add(segment.loc) #once you draw the segment, add its location to allSnakeLocations
+            self.ownLocations[segment.loc] = segment
 
 
     #MOVING THE SNAKE
@@ -56,9 +57,8 @@ class Snake:
         firstSegment.moveSeg()
         if self.outOfBounds():
             self.clear()
-            return 0
-        else:
-            self.draw(firstSegment, True) #first segment doesn't get added to all Snake locations
+            return len(self.body)
+        self.draw(firstSegment, True) #first segment doesn't get added to own locations yet
         #rest of snake segments excluding the snake head
         for i in range(len(self.body) - 1, 0, -1):  # back to front
             segment = self.body[i]
@@ -67,19 +67,17 @@ class Snake:
             self.draw(segment)
             self.ownLocations[segment.loc] = segment
         #check if snake head is in its own body
-        if not self.validMove():
-            return 0
-        return len(self.body) - 1 #bc snake head isn't included
+        self.validMove()
+        return len(self.body)
 
     def addHead(self,first): #add segment onto front of snake when it hits an apple
         body = self.body
         body.insert(0, Segment(first.newLoc(first.dir), first.dir)) #insert segment at front of snake
         if self.validMove():
-            self.draw(body[0], True) #first segment doesn't get added to all snake locations
+            self.draw(body[0], True) #first segment doesn't get added to own locations yet
             for i in range(1, len(body)): #draw rest of snake body after you draw the head
                 self.draw(body[i])
-                self.ownLocations[body[i].loc] = body[i]
-        return len(self.body) - 1 #bc snake head isn't included
+        return len(self.body)
 
     #CHECKING VALIDITY OF SNAKE
     def validMove(self):
@@ -90,7 +88,7 @@ class Snake:
         elif self.outOfBounds():
             self.clear()
             return False
-        self.ownLocations[firstSeg.loc] = firstSeg
+        self.ownLocations[firstSeg.loc] = firstSeg #now add first segment in own locations
         return True
 
     def outOfBounds(self):
