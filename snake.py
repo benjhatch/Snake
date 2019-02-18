@@ -25,6 +25,9 @@ class Snake:
     def changeDir(self,newDir):
         if not self.out:
             first = self.body[0]
+            if len(self.body) == 1:
+                first.setDir(newDir)
+                return
             if first.newLoc(newDir) != self.body[1].loc:
                 first.setDir(newDir)
 
@@ -33,7 +36,6 @@ class Snake:
         size = self.size
         pg.draw.rect(self.screen, self.color,((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
         self.allSnakeLocations.add(segment.loc)
-        self.ownLocations[segment.loc] = segment
 
 
     #MOVING THE SNAKE
@@ -49,42 +51,46 @@ class Snake:
 
     def moveBody(self):
         firstSegment = self.body[0]
-        if not self.outOfBounds(firstSegment.newLoc(firstSegment.dir)):
-            for i in range(len(self.body) - 1, 0, -1):  # back to front excluding the snake head
-                segment = self.body[i]
-                segment.moveSeg()
-                segment.setDir(self.body[i - 1].dir)
-                self.draw(segment)
-            firstSegment.moveSeg() #just for the first
-            if not self.validMove():
-                return 0
-            else:
-                self.draw(firstSegment)
-        return len(self.ownLocations)
+        firstSegment.moveSeg()  # just for the first
+        if self.outOfBounds():
+            self.clear()
+            return 0
+        else:
+            self.draw(firstSegment)
+        for i in range(len(self.body) - 1, 0, -1):  # back to front excluding the snake head
+            segment = self.body[i]
+            segment.moveSeg()
+            segment.setDir(self.body[i - 1].dir)
+            self.draw(segment)
+            self.ownLocations[segment.loc] = segment
+        if not self.validMove():
+            return 0
+        return len(self.body)
 
     def addHead(self,first):
         body = self.body
         body.insert(0, Segment(first.newLoc(first.dir), first.dir))
         if self.validMove():
-            self.ownLocations[body[0].loc] = body[0]
             self.draw(body[0])
             for i in range(1, len(body)):
                 self.draw(body[i])
+                self.ownLocations[body[i].loc] = body[i]
         return len(self.body)
 
     #CHECKING VALIDITY OF SNAKE
     def validMove(self):
-        firstSeg = self.body[0].loc
-        if firstSeg in self.ownLocations:
+        firstSeg = self.body[0]
+        if firstSeg.loc in self.ownLocations:
             self.clear()
             return False
-        elif self.outOfBounds(firstSeg):
-            print("out")
+        elif self.outOfBounds():
             self.clear()
             return False
+        self.ownLocations[firstSeg.loc] = firstSeg
         return True
 
-    def outOfBounds(self,loc):
+    def outOfBounds(self):
+        loc = self.body[0].loc
         if loc[0] == -1 or loc[1] == -1 or loc[0] == self.rows or loc[1] == self.cols:
             return True
         return False
