@@ -24,10 +24,10 @@ class Jungle:
         self.snakeHeads = []
         i = 0
         lengthOfAllSnakes = 0
+        self.apples.drawApples()
         while i < len(self.snakes):
             lengthOfAllSnakes += self.snakes[i].moveAlong()
             i+=1
-        self.apples.drawApples()
         if len(self.allSnakeLocations) < lengthOfAllSnakes:
             toBeCleared = []
             snakeHeads = [snake.body[0].loc for snake in self.snakes if not snake.out]
