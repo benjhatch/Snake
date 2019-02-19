@@ -2,9 +2,10 @@ from segment import Segment
 import pygame as pg
 
 class Snake:
-    def __init__(self, screen, size, allSnakeLocations, tailLocations, body, rows, cols, color=(0,255,0), out=False):
+    def __init__(self, screen, size, appleTree, allSnakeLocations, tailLocations, body, rows, cols, color=(0,255,0), out=False):
         self.screen = screen
         self.size = size
+        self.appleTree = appleTree
         self.allSnakeLocations = allSnakeLocations
         self.tailLocations = tailLocations
         self.body = body
@@ -44,12 +45,17 @@ class Snake:
             color = (255,255,255)
         pg.draw.rect(self.screen, color, ((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
 
+    def hitApple(self, first):
+        if first.loc in self.appleTree.appleLocations:
+            self.appleTree.appleHit(first.loc)
+            return True
+
     #MOVING THE SNAKE
-    def moveAlong(self, hitApple = False): #determines course of action when moveSnakes() is called in jungle
+    def moveAlong(self): #determines course of action when moveSnakes() is called in jungle
         if self.out: #move to next snake
             return 0
         first = self.body[0]
-        if hitApple: #snake has hit the apple
+        if self.hitApple(first): #snake has hit the apple
             return self.addHead(first) #return length of snake
         else: #if it doesn't hit the apple, move all the segments
             self.ownLocations = {}
