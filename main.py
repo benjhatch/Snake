@@ -4,7 +4,7 @@ import time
 
 timer = pg.time.Clock()
 run = True
-timeLimit = 250
+timeLimit = 60
 keyHit = False
 
 #change me...use wasd for first snake
@@ -23,4 +23,4 @@ while run:
             snake.changeDir(tuple[1])
     jungle.moveSnakes()
     pg.display.update()
-    time.sleep(timeLimit / 5000)
+    time.sleep(timeLimit / 1000)
