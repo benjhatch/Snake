@@ -8,13 +8,13 @@ class Jungle:
         self.rows = rows
         self.cols = cols
         self.blockSize = blockSize
-        self.colorList = [(0,255,0),(0,0,255),(255,255,255),(100,100,150)]
+        self.colorList = [(0,255,0),(0,0,255),(255,255,255),(100,100,150),(30,100,180)]
         self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
         self.allSnakeLocations = set() #keeps track of all snake locations in one list
         self.tailLocations = set()
         #self.apples = AppleTree(self.screen, blockSize, rows, cols, self.allSnakeLocations, numApples)
-        self.apples = self.initApples(numApples)
         self.snakes = self.initSnakes(snakeCount, snakeLength)
+        self.apples = self.initApples(numApples)
         self.toBeAdded = toBeAdded
         self.keys = {pg.K_w: (0, 0), pg.K_d: (0, 1), pg.K_s: (0, 2), pg.K_a: (0, 3), pg.K_UP: (1, 0),
                      pg.K_RIGHT: (1, 1), pg.K_DOWN: (1, 2), pg.K_LEFT: (1, 3),
@@ -74,9 +74,11 @@ class Jungle:
             col = self.placeFirstPeice(length)
             dir = self.initDir(col)
             snakes.append(Snake(self.screen, self.blockSize, self.allSnakeLocations, self.tailLocations, [Segment((row, col), dir)], self.rows, self.cols, self.colorList[i]))
+            self.allSnakeLocations.add((row,col))
             for j in range(length - 1):  # adding on rest of segments
                 nextLocation = snakes[i].body[j].priorLoc(dir)
                 snakes[i].body.append(Segment(nextLocation, dir))
+                self.allSnakeLocations.add(nextLocation)
         return snakes
 
     #apple making
@@ -85,7 +87,7 @@ class Jungle:
         for i in range(numApples):
             row = random.randint(0, self.rows - 1)
             col = random.randint(0, self.cols - 1)
-            if (row, col) in apples:
+            if (row, col) in apples or (row, col) in self.allSnakeLocations:
                 i -= 1
             else:
                 apples[(row,col)] = Apple(self.screen, self.blockSize, (row, col))

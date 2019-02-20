@@ -2,14 +2,13 @@ from jungle import Jungle
 import pygame as pg
 import time
 
-timer = pg.time.Clock()
 run = True
-timeLimit = 60
+timeLimit = 150
 keyHit = False
 
 #change me...use wasd for first snake
 #rows, cols, size, number of snakes, length of snakes, number of apples, number added on contact with apple
-jungle = Jungle(40, 40, 15, 2, 8, 5, 5)
+jungle = Jungle(40, 40, 20, 2, 5, 3, 5)
 pg.init()
 
 while run:
@@ -23,4 +22,4 @@ while run:
             snake.changeDir(tuple[1])
     jungle.moveSnakes()
     pg.display.update()
-    time.sleep(timeLimit / 1000)
+    time.sleep(timeLimit / 5000)
