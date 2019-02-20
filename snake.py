@@ -2,16 +2,16 @@ from segment import Segment
 import pygame as pg
 
 class Snake:
-    def __init__(self, screen, size, appleTree, allSnakeLocations, tailLocations, body, rows, cols, color=(0,255,0), out=False):
+    def __init__(self, screen, size, allSnakeLocations, tailLocations, body, rows, cols, color=(0,255,0), toBeAdded = 0, out=False):
         self.screen = screen
         self.size = size
-        self.appleTree = appleTree
         self.allSnakeLocations = allSnakeLocations
         self.tailLocations = tailLocations
         self.body = body
         self.rows = rows
         self.cols = cols
         self.color = color
+        self.toBeAdded = toBeAdded
         self.out = out
         self.ownLocations = {}
         for seg in self.body:
@@ -41,22 +41,15 @@ class Snake:
         if not first:
             self.ownLocations[segment.loc] = segment
             self.tailLocations.add(segment.loc)
-        else:
-            color = (255,255,255)
         pg.draw.rect(self.screen, color, ((segment.loc[1] * size), (segment.loc[0] * size), size - 2, size - 2))
 
-    def hitApple(self, first):
-        if first.loc in self.appleTree.appleLocations:
-            self.appleTree.appleHit(first.loc)
-            return True
 
     #MOVING THE SNAKE
     def moveAlong(self): #determines course of action when moveSnakes() is called in jungle
         if self.out: #move to next snake
             return 0
-        first = self.body[0]
-        if self.hitApple(first): #snake has hit the apple
-            return self.addHead(first) #return length of snake
+        if self.toBeAdded > 0: #snake has hit the apple
+            return self.addHead() #return length of snake
         else: #if it doesn't hit the apple, move all the segments
             self.ownLocations = {}
             return self.moveBody() #return length of snake
@@ -80,13 +73,15 @@ class Snake:
         self.validMove()
         return len(self.body)
 
-    def addHead(self,first): #add segment onto front of snake when it hits an apple
+    def addHead(self): #add segment onto front of snake when it hits an apple
         body = self.body
+        first = body[0]
         body.insert(0, Segment(first.newLoc(first.dir), first.dir)) #insert segment at front of snake
         if self.validMove():
             self.draw(body[0], True) #first segment doesn't get added to own locations yet
             for i in range(1, len(body)): #draw rest of snake body after you draw the head
                 self.draw(body[i])
+        self.toBeAdded -= 1
         return len(self.body)
 
     #CHECKING VALIDITY OF SNAKE
