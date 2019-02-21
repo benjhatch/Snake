@@ -25,12 +25,10 @@ class Jungle:
         self.tailLocations.clear()
         lengthOfAllSnakes = 0
         applesToBeMoved = []
-        i = 0
-        while i < len(self.snakes):
+        for i in range(len(self.snakes)):
             snake = self.snakes[i]
             lengthOfAllSnakes += snake.moveAlong()
             appleHit = self.detectHit(snake, applesToBeMoved)
-            i+=1
         if appleHit:
             self.moveApples(applesToBeMoved)
         self.drawApples()
