@@ -106,5 +106,6 @@ class Snake:
         self.out = True
         for i in range(len(self.body)): #maybe don't discard first, idk
             self.allSnakeLocations.discard(self.body[i].loc)
+            self.tailLocations.discard(self.body[i].loc)
         self.body = []
         self.ownLocations = {}
