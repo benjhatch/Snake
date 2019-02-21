@@ -12,7 +12,6 @@ class Jungle:
         self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
         self.allSnakeLocations = set() #keeps track of all snake locations in one list
         self.tailLocations = set()
-        #self.apples = AppleTree(self.screen, blockSize, rows, cols, self.allSnakeLocations, numApples)
         self.snakes = self.initSnakes(snakeCount, snakeLength)
         self.apples = self.initApples(numApples)
         self.toBeAdded = toBeAdded
@@ -24,34 +23,36 @@ class Jungle:
     def moveSnakes(self):
         self.allSnakeLocations.clear()
         self.tailLocations.clear()
-        i = 0
-        lengthOfAllSnakes = 0
         applesToBeMoved = []
+        lengthOfAllSnakes = 0
         appleHit = False
-        while i < len(self.snakes):
+        for i in range(len(self.snakes)):
             snake = self.snakes[i]
             lengthOfAllSnakes += snake.moveAlong()
-            if not snake.out:
-                if snake.body[0].loc in self.apples:
-                    appleHit = True
-                    snake.toBeAdded += self.toBeAdded
-                    applesToBeMoved.append(self.apples[snake.body[0].loc])
-            i+=1
+            if self.detectHit(snake,applesToBeMoved):
+                appleHit = True
         if appleHit:
-            self.appleHit(applesToBeMoved)
+            self.moveApples(applesToBeMoved)
         self.drawApples()
         if len(self.allSnakeLocations) < lengthOfAllSnakes:
             self.snakeCollision()
 
-    def drawApples(self):
-        for location in self.apples:
-            self.apples[location].drawApple()
+    def detectHit(self, snake, applesToBeMoved):
+        if not snake.out and snake.body[0].loc in self.apples:
+            snake.toBeAdded += self.toBeAdded
+            applesToBeMoved.append(self.apples[snake.body[0].loc])
+            return True
+        return False
 
-    def appleHit(self, applesToBeMoved):
+    def moveApples(self, applesToBeMoved):
         for i in range(len(applesToBeMoved)):
             self.apples.pop(applesToBeMoved[i].loc)
             applesToBeMoved[i].changeLoc(self.rows, self.cols, self.apples, self.allSnakeLocations)
             self.apples[applesToBeMoved[i].loc] = applesToBeMoved[i]
+
+    def drawApples(self):
+        for location in self.apples:
+            self.apples[location].drawApple()
 
     def snakeCollision(self):
         toBeCleared = []
@@ -60,7 +61,7 @@ class Jungle:
             snake = self.snakes[i]
             if not snake.out:
                 loc = snake.body[0].loc
-                if not snake.out and (loc in self.tailLocations or snakeHeads.count(loc) > 1):
+                if loc in self.tailLocations or snakeHeads.count(loc) > 1:
                     toBeCleared.append(i)
         for i in range(len(toBeCleared)):
             self.snakes[toBeCleared[i]].clear()
@@ -81,19 +82,6 @@ class Jungle:
                 self.allSnakeLocations.add(nextLocation)
         return snakes
 
-    #apple making
-    def initApples(self, numApples):
-        apples = {}
-        for i in range(numApples):
-            row = random.randint(0, self.rows - 1)
-            col = random.randint(0, self.cols - 1)
-            if (row, col) in apples or (row, col) in self.allSnakeLocations:
-                i -= 1
-            else:
-                apples[(row,col)] = Apple(self.screen, self.blockSize, (row, col))
-        return apples
-
-
     def placeFirstPeice(self, length):
         if length > self.cols / 2:
             return 0 + length
@@ -107,3 +95,15 @@ class Jungle:
             return 1  # right
         else:
             return 3  # left
+
+    # apple making
+    def initApples(self, numApples):
+        apples = {}
+        for i in range(numApples):
+            row = random.randint(0, self.rows - 1)
+            col = random.randint(0, self.cols - 1)
+            if (row, col) in apples or (row, col) in self.allSnakeLocations:
+                i -= 1
+            else:
+                apples[(row, col)] = Apple(self.screen, self.blockSize, (row, col))
+        return apples
