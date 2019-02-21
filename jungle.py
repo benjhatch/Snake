@@ -60,7 +60,7 @@ class Jungle:
             snake = self.snakes[i]
             if not snake.out:
                 loc = snake.body[0].loc
-                if not snake.out and (loc in self.tailLocations or snakeHeads.count(loc) > 1):
+                if loc in self.tailLocations or snakeHeads.count(loc) > 1:
                     toBeCleared.append(i)
         for i in range(len(toBeCleared)):
             self.snakes[toBeCleared[i]].clear()
