@@ -4,7 +4,7 @@ from apple import Apple
 import pygame as pg
 import random
 class Jungle:
-    def __init__(self,rows,cols,blockSize,snakeCount,snakeLength, numApples, toBeAdded = 3):
+    def __init__(self,rows, cols, blockSize, snakeCount, snakeLength, numApples, toBeAdded = 3):
         self.rows = rows
         self.cols = cols
         self.blockSize = blockSize

@@ -1,15 +1,16 @@
 import socket
+import pickle
 import pygame as pg
 
 class Client:
-    def __init__(self):
-        self.dir = "1"
+    def __init__(self,snakeIndex):
+        self.dir = (snakeIndex, 1)
         self.s = socket.socket()
         self.host = input("Enter server hostname: ")
         self.port = 8080
         self.s.connect((self.host,self.port))
         print("Connected to server...Activating Client")
-        self.keys = {pg.K_w: (0, 0), pg.K_d: (0, 1), pg.K_s: (0, 2), pg.K_a: (0, 3)}
+        self.keys = self.makeKeys(snakeIndex)
         pg.init()
         self.run = True
         self.activateClient()
@@ -20,13 +21,15 @@ class Client:
                 if event.type == pg.QUIT:
                     self.run = False
                 if event.type == pg.KEYDOWN and event.key in self.keys:
-                    self.dir = str(self.keys[event.key])
-            incoming = self.s.recv(1024)
-            #after getting message
-            print("got ping")
-            print("sending direction")
-            message = self.dir.encode()
+                    self.dir = self.keys[event.key]
+            message = pickle.dumps(self.dir)
             self.s.send(message)
-            print("direction sent")
-            print()
-client = Client()
+            #now receive the screen
+            incoming = self.s.recv(1024)
+            #incoming = pickle.loads(incoming)
+            #print(incoming)
+
+    def makeKeys(self, index):
+        return {pg.K_w: (index, 0), pg.K_d: (index, 1), pg.K_s: (index, 2), pg.K_a: (index, 3)}
+
+client1 = Client(0)
