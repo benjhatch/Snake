@@ -3,7 +3,7 @@ import pygame as pg
 import time
 
 run = True
-timeLimit = 1500
+timeLimit = 200
 keyHit = False
 
 #change me...use wasd for first snake
