@@ -12,7 +12,7 @@ class Server:
         self.all_connections = []
         self.all_address = []
         self.s = socket.socket()
-        self.host = socket.gethostname()
+        self.host = socket.gethostbyname(socket.gethostname())
         print("server will start on host", self.host)
 
         self.port = 8080
@@ -33,7 +33,11 @@ class Server:
             self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
 
     def sendScreen(self):
-        locations = [self.jungle.blockSize, self.jungle.allSnakeLocations, list(self.jungle.apples.keys())]
+        snakeLocations = []
+        for snake in self.jungle.snakes:
+            snakeInfo = [snake.color, list(snake.ownLocations.keys())]
+            snakeLocations.append(snakeInfo)
+        locations = [self.jungle.blockSize, snakeLocations, list(self.jungle.apples.keys())]
         message = pickle.dumps(locations)
         for conn in self.all_connections:
             conn.send(message)

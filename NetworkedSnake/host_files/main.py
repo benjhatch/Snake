@@ -14,7 +14,7 @@ server = Server(jungle)
 pg.init()
 
 while run:
-    jungle.screen.fill((255, 255, 255))
+    jungle.screen.fill((0, 0, 0))
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False

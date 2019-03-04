@@ -5,13 +5,13 @@ import pygame as pg
 
 
 class Client:
-    def __init__(self, number=0, cols=40, rows=40, blockSize=10):
+    def __init__(self, ip, number=0, cols=40, rows=40, blockSize=10):
         self.run = True
         self.keys = {pg.K_w: (number, 0), pg.K_d: (number, 1), pg.K_s: (number, 2), pg.K_a: (number, 3)}
         self.screen = pg.display.set_mode((cols * blockSize, rows * blockSize))
 
         self.s = socket.socket()
-        self.host = socket.gethostbyname("Benjamins-MBP") #ENTER IP ADDRESS FOR HOST!!!
+        self.host = ip #ENTER IP ADDRESS FOR HOST!!!
         self.port = 8080
         self.s.connect((self.host, self.port))
         print("Connected to chat server")
@@ -33,13 +33,15 @@ class Client:
 
     def drawScreen(self, data):
         self.screen.fill((0,0,0))
-        snake_color = (0, 255, 0)
         apple_color = (255, 0, 0)
         size = data[0]
         snakeLocations = data[1]
         apples = data[2]
-        for segment in snakeLocations:
-            pg.draw.rect(self.screen, snake_color, ((segment[1] * size), (segment[0] * size), size - 2, size - 2))
+        for snake in snakeLocations:
+            snake_color = snake[0]
+            locations = snake[1]
+            for segment in locations:
+                pg.draw.rect(self.screen, snake_color, ((segment[1] * size), (segment[0] * size), size - 2, size - 2))
         for location in apples:
             pg.draw.rect(self.screen, apple_color, ((location[1] * size), (location[0] * size), size - 2, size - 2))
         pg.display.update()
@@ -54,4 +56,4 @@ class Client:
                     self.s.send(snakeInfo)
 
 #snakeNum = int(input("Enter the number of the snake: "))
-client = Client()  # put the snake you want to control in the parentheses...
+client = Client("172.20.10.3")  # put the snake you want to control in the parentheses...
