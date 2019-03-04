@@ -2,13 +2,13 @@ import socket
 import threading
 from queue import Queue
 import pickle
-import time
 
 class Server:
-    def __init__(self, snakes, numSnakes = 1):
+    def __init__(self, jungle):
         self.run = True
-        self.snakes = snakes
-        self.numSnakes = numSnakes
+        self.snakes = jungle.snakes
+        self.numSnakes = len(self.snakes)
+        self.jungle = jungle
         self.all_connections = []
         self.all_address = []
         self.s = socket.socket()
@@ -32,12 +32,10 @@ class Server:
             snakeInfo = pickle.loads(incoming_msg)
             self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
 
-    def sendMessage(self):
-        while self.run:
-            message = "this is the screen"
-            for conn in self.all_connections:
-                conn.send(message.encode())
-            time.sleep(3)
+    def sendScreen(self):
+        message = pickle.dumps(self.jungle.allSnakeLocations)
+        for conn in self.all_connections:
+            conn.send(message)
 
     #SERVER START
     def resetConnections(self):
@@ -58,8 +56,6 @@ class Server:
 
     #THREADING FUNCTIONS
     def startThreads(self):
-        sendingThread = threading.Thread(target=self.sendMessage)
-        sendingThread.start()
         for i in range(self.numSnakes):
             t = threading.Thread(target=self.threader)
             t.daemon = True
