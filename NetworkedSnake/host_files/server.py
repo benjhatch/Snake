@@ -33,7 +33,8 @@ class Server:
             self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
 
     def sendScreen(self):
-        message = pickle.dumps(self.jungle.allSnakeLocations)
+        locations = [self.jungle.blockSize, self.jungle.allSnakeLocations, list(self.jungle.apples.keys())]
+        message = pickle.dumps(locations)
         for conn in self.all_connections:
             conn.send(message)
 

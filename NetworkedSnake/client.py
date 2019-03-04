@@ -2,7 +2,6 @@ import socket
 import threading
 import pickle
 import pygame as pg
-import time
 
 
 class Client:
@@ -32,12 +31,17 @@ class Client:
             incoming_message = pickle.loads(incoming_message)
             self.drawScreen(incoming_message)
 
-    def drawScreen(self, locations):
+    def drawScreen(self, data):
         self.screen.fill((0,0,0))
-        color = (0, 255, 0)
-        size = 10
-        for segment in locations:
-            pg.draw.rect(self.screen, color, ((segment[1] * size), (segment[0] * size), size - 2, size - 2))
+        snake_color = (0, 255, 0)
+        apple_color = (255, 0, 0)
+        size = data[0]
+        snakeLocations = data[1]
+        apples = data[2]
+        for segment in snakeLocations:
+            pg.draw.rect(self.screen, snake_color, ((segment[1] * size), (segment[0] * size), size - 2, size - 2))
+        for location in apples:
+            pg.draw.rect(self.screen, apple_color, ((location[1] * size), (location[0] * size), size - 2, size - 2))
         pg.display.update()
 
     def sendDir(self):
@@ -49,5 +53,5 @@ class Client:
                     snakeInfo = pickle.dumps(self.keys[event.key])
                     self.s.send(snakeInfo)
 
-
+#snakeNum = int(input("Enter the number of the snake: "))
 client = Client()  # put the snake you want to control in the parentheses...
