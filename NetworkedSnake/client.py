@@ -11,7 +11,7 @@ class Client:
         self.screen = pg.display.set_mode((cols * blockSize, rows * blockSize))
 
         self.s = socket.socket()
-        self.host = "Benjamins-MBP"
+        self.host = socket.gethostbyname("Benjamins-MBP") #ENTER IP ADDRESS FOR HOST!!!
         self.port = 8080
         self.s.connect((self.host, self.port))
         print("Connected to chat server")
