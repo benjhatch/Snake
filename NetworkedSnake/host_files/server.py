@@ -14,6 +14,7 @@ class Server:
         self.s = socket.socket()
         self.host = socket.gethostbyname(socket.gethostname())
         print("server will start on host", self.host)
+        print("Copy ip and paste into Client input upon startup")
 
         self.port = 8080
         self.s.bind((self.host,self.port))
@@ -37,7 +38,7 @@ class Server:
         for snake in self.jungle.snakes:
             snakeInfo = [snake.color, list(snake.ownLocations.keys())]
             snakeLocations.append(snakeInfo)
-        locations = [self.jungle.blockSize, snakeLocations, list(self.jungle.apples.keys())]
+        locations = [snakeLocations, list(self.jungle.apples.keys())]
         message = pickle.dumps(locations)
         for conn in self.all_connections:
             conn.send(message)
@@ -56,8 +57,14 @@ class Server:
             self.s.setblocking(1)
             self.all_connections.append(conn)
             self.all_address.append(addr)
+            self.sendDisplaySettings(conn)
             self.q.put(conn)
             print(addr, "Has connected to the server and is now online...\n")
+
+    def sendDisplaySettings(self, conn):
+        settings = [self.jungle.rows, self.jungle.cols, self.jungle.blockSize]
+        msg = pickle.dumps(settings)
+        conn.send(msg)
 
     #THREADING FUNCTIONS
     def startThreads(self):

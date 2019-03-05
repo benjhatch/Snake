@@ -5,18 +5,19 @@ import pygame as pg
 
 
 class Client:
-    def __init__(self, ip, number=0, cols=40, rows=40, blockSize=10):
+    def __init__(self, ip, number = 0):
         self.run = True
         self.keys = {pg.K_w: (number, 0), pg.K_d: (number, 1), pg.K_s: (number, 2), pg.K_a: (number, 3)}
-        self.screen = pg.display.set_mode((cols * blockSize, rows * blockSize))
 
         self.s = socket.socket()
         self.host = ip #ENTER IP ADDRESS FOR HOST!!!
         self.port = 8080
         self.s.connect((self.host, self.port))
+        self.recvDisplaySettings()
         print("Connected to chat server")
 
         self.print_lock = threading.Lock()
+        self.screen = pg.display.set_mode((self.cols * self.size, self.rows * self.size))
         pg.init()
         self.startThreads()
         self.sendDir()
@@ -34,9 +35,9 @@ class Client:
     def drawScreen(self, data):
         self.screen.fill((0,0,0))
         apple_color = (255, 0, 0)
-        size = data[0]
-        snakeLocations = data[1]
-        apples = data[2]
+        snakeLocations = data[0]
+        size = self.size
+        apples = data[1]
         for snake in snakeLocations:
             snake_color = snake[0]
             locations = snake[1]
@@ -55,5 +56,11 @@ class Client:
                     snakeInfo = pickle.dumps(self.keys[event.key])
                     self.s.send(snakeInfo)
 
-#snakeNum = int(input("Enter the number of the snake: "))
-client = Client("172.20.10.3")  # put the snake you want to control in the parentheses...
+    def recvDisplaySettings(self):
+        settings = self.s.recv(1024)
+        settings = pickle.loads(settings)
+        self.rows = settings[0]
+        self.cols = settings[1]
+        self.size = settings[2]
+
+client = Client(input("Server IP: "))
