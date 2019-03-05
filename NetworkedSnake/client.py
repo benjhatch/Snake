@@ -63,4 +63,6 @@ class Client:
         self.cols = settings[1]
         self.size = settings[2]
 
-client = Client(input("Server IP: "))
+ip = input("Server IP: ")
+snakeNum = int(input("Enter the snake index: "))
+client = Client(ip, snakeNum)

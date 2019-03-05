@@ -13,16 +13,19 @@ class Server:
         self.all_address = []
         self.s = socket.socket()
         self.host = socket.gethostbyname(socket.gethostname())
-        print("server will start on host", self.host)
 
         self.port = 8080
-        self.s.bind((self.host,self.port))
+        try:
+            self.s.bind((self.host,self.port))
+        except:
+            print("unable to bind host and port...check if port is active")
         print("Server done binding to host and port successfully\n")
 
         self.q = Queue()
         print("Server is waiting for incoming connections")
+        print("server will start on host", self.host)
         print("Copy ip and paste into client input upon client startup")
-        self.s.listen(5)
+        self.s.listen(len(jungle.snakes))
         self.acceptSocket()
         self.print_lock = threading.Lock()
         self.startThreads()
@@ -36,7 +39,7 @@ class Server:
                 self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
             except:
                 individualConn = False
-                print("Client has quit")
+                print(conn, "has quit")
 
     def sendScreen(self):
         snakeLocations = []
@@ -50,8 +53,8 @@ class Server:
                 conn.send(message)
             except:
                 conn.close()
+                print("no longer sending screen to", conn)
                 self.all_connections.remove(conn)
-                print("Connection lost")
 
     #SERVER START
     def resetConnections(self):
