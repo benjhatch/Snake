@@ -14,7 +14,6 @@ class Server:
         self.s = socket.socket()
         self.host = socket.gethostbyname(socket.gethostname())
         print("server will start on host", self.host)
-        print("Copy ip and paste into Client input upon startup")
 
         self.port = 8080
         self.s.bind((self.host,self.port))
@@ -22,16 +21,22 @@ class Server:
 
         self.q = Queue()
         print("Server is waiting for incoming connections")
+        print("Copy ip and paste into client input upon client startup")
         self.s.listen(5)
         self.acceptSocket()
         self.print_lock = threading.Lock()
         self.startThreads()
 
     def recvMessage(self,conn):
-        while self.run:
-            incoming_msg = conn.recv(1024)
-            snakeInfo = pickle.loads(incoming_msg)
-            self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
+        individualConn = True
+        while self.run and individualConn:
+            try:
+                incoming_msg = conn.recv(1024)
+                snakeInfo = pickle.loads(incoming_msg)
+                self.snakes[snakeInfo[0]].changeDir(snakeInfo[1])
+            except:
+                individualConn = False
+                print("Client has quit")
 
     def sendScreen(self):
         snakeLocations = []
@@ -41,7 +46,12 @@ class Server:
         locations = [snakeLocations, list(self.jungle.apples.keys())]
         message = pickle.dumps(locations)
         for conn in self.all_connections:
-            conn.send(message)
+            try:
+                conn.send(message)
+            except:
+                conn.close()
+                self.all_connections.remove(conn)
+                print("Connection lost")
 
     #SERVER START
     def resetConnections(self):
