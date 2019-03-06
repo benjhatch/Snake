@@ -4,7 +4,7 @@ import pygame as pg
 import time
 
 run = True
-timeLimit = 200
+timeLimit = int(input("Enter snake speed: "))
 keyHit = False
 
 #change me...use wasd for first snake
