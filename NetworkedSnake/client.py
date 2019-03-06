@@ -14,7 +14,7 @@ class Client:
         self.port = 8080
         self.s.connect((self.host, self.port))
         self.recvDisplaySettings()
-        print("Connected to chat server")
+        print("Connected to snake server")
 
         self.print_lock = threading.Lock()
         self.screen = pg.display.set_mode((self.cols * self.size, self.rows * self.size))
