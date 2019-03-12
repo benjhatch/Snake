@@ -4,17 +4,13 @@ from apple import Apple
 import pygame as pg
 import random
 class Jungle:
-    def __init__(self,rows, cols, blockSize, snakeCount, snakeLength, numApples, toBeAdded = 3):
-        self.rows = rows
-        self.cols = cols
-        self.blockSize = blockSize
+    def __init__(self):
         self.colorList = [(0,255,0),(0,0,255),(255,255,255),(100,100,150),(30,100,180)]
-        self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
+        #lists
         self.allSnakeLocations = set() #keeps track of all snake locations in one list
         self.tailLocations = set()
-        self.snakes = self.initSnakes(snakeCount, snakeLength)
-        self.apples = self.initApples(numApples)
-        self.toBeAdded = toBeAdded
+
+        self.getJungleSettings()
         self.keys = {pg.K_w: (0, 0), pg.K_d: (0, 1), pg.K_s: (0, 2), pg.K_a: (0, 3), pg.K_UP: (1, 0),
                      pg.K_RIGHT: (1, 1), pg.K_DOWN: (1, 2), pg.K_LEFT: (1, 3),
                      pg.K_i: (2, 0), pg.K_l: (2, 1), pg.K_k: (2, 2), pg.K_j: (2, 3)}
@@ -67,6 +63,31 @@ class Jungle:
             self.snakes[toBeCleared[i]].clear()
 
     #INITIALIZING JUNGLE
+    #settings
+    def getJungleSettings(self):
+        default = input("Default Settings? 'y' for yes or 'n' for no: ")
+        if default == 'y':
+            #jungle = Jungle(40, 40, 10, 1, 5, 1, 5)
+            self.rows = 40
+            self.cols = 40
+            self.blockSize = 10
+            self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
+            self.toBeAdded = 5
+            self.snakes = self.initSnakes(1, 5)
+            self.apples = self.initApples(1)
+        else:
+            self.rows = int(input("Enter number of rows: "))
+            self.cols = int(input("Enter number of columns: "))
+            self.blockSize = int(input("Enter segment size: "))
+            #prepare to make snake and apple lists
+            numSnakes = int(input("Enter number of snakes: "))
+            length = int(input("Enter snake length: "))
+            numApples = int(input("Enter number of apples: "))
+            self.toBeAdded = int(input("Enter snake gain upon apple contact: "))
+            self.screen = pg.display.set_mode(((self.cols) * self.blockSize, (self.rows) * self.blockSize))
+            self.snakes = self.initSnakes(numSnakes, length)
+            self.apples = self.initApples(numApples)
+            
     #snake making
     def initSnakes(self, count, length):
         snakes = []
