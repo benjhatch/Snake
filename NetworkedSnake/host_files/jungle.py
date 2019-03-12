@@ -16,22 +16,22 @@ class Jungle:
                      pg.K_i: (2, 0), pg.K_l: (2, 1), pg.K_k: (2, 2), pg.K_j: (2, 3)}
 
     #JUNGLE IN ACTION
-    def moveSnakes(self):
-        self.allSnakeLocations.clear()
+    def moveSnakes(self): #moves all snakes
+        self.allSnakeLocations.clear() #clear prior moves locations
         self.tailLocations.clear()
-        applesToBeMoved = []
+        applesToBeMoved = [] #keeps track of which apples are hit
         lengthOfAllSnakes = 0
         appleHit = False
-        for i in range(len(self.snakes)):
+        for i in range(len(self.snakes)): #for all snakes
             snake = self.snakes[i]
-            lengthOfAllSnakes += snake.moveAlong()
-            if self.detectHit(snake,applesToBeMoved):
+            lengthOfAllSnakes += snake.moveAlong() #returns length of snake and moves it
+            if self.detectHit(snake,applesToBeMoved): #detects if snake hits any apple
                 appleHit = True
         if appleHit:
-            self.moveApples(applesToBeMoved)
-        self.drawApples()
-        if len(self.allSnakeLocations) < lengthOfAllSnakes:
-            self.snakeCollision()
+            self.moveApples(applesToBeMoved) #moves the apples that are hit
+        self.drawApples() #draws the apples
+        if len(self.allSnakeLocations) < lengthOfAllSnakes: #this means a snake has hit another snake
+            self.snakeCollision() #handle snake collision
 
     def detectHit(self, snake, applesToBeMoved):
         if not snake.out and snake.body[0].loc in self.apples:
