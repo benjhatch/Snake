@@ -5,16 +5,18 @@ import pygame as pg
 
 
 class Client:
-    def __init__(self, ip, number = 0):
+    def __init__(self, ip, snakeColor):
         self.run = True
-        self.keys = {pg.K_w: (number, 0), pg.K_d: (number, 1), pg.K_s: (number, 2), pg.K_a: (number, 3)}
 
         self.s = socket.socket()
         self.host = ip #ENTER IP ADDRESS FOR HOST!!!
         self.port = 8080
         self.s.connect((self.host, self.port))
-        self.recvDisplaySettings()
+        self.index = self.recvDisplaySettings()
         print("Connected to snake server")
+        self.keys = {pg.K_w: (self.index, 0), pg.K_d: (self.index, 1), pg.K_s: (self.index, 2), pg.K_a: (self.index, 3)}
+        snakeColor = pickle.dumps(snakeColor)
+        self.s.send(snakeColor)
 
         self.print_lock = threading.Lock()
         self.screen = pg.display.set_mode((self.cols * self.size, self.rows * self.size))
@@ -62,7 +64,8 @@ class Client:
         self.rows = settings[0]
         self.cols = settings[1]
         self.size = settings[2]
+        return settings[3] #snake index
 
 ip = input("Server IP: ")
-snakeNum = int(input("Enter the snake index: "))
-client = Client(ip, snakeNum)
+snakeColor = input("Enter the snake color like so ~ R,G,B: ")
+client = Client(ip, snakeColor)

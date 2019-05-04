@@ -67,7 +67,6 @@ class Jungle:
     def getJungleSettings(self):
         default = input("Default Settings? 'y' for yes or 'n' for no: ")
         if default == 'y':
-            #jungle = Jungle(40, 40, 10, 1, 5, 1, 5)
             self.rows = 40
             self.cols = 40
             self.blockSize = 10

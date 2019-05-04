@@ -65,19 +65,31 @@ class Server:
 
     def acceptSocket(self):
         self.resetConnections()
+        snakeIndex = 0
         while len(self.all_connections) < self.numSnakes:
             conn, addr = self.s.accept()
             self.s.setblocking(1)
             self.all_connections.append(conn)
             self.all_address.append(addr)
-            self.sendDisplaySettings(conn)
+            self.sendDisplaySettings(conn, snakeIndex)
             self.q.put(conn)
             print(addr, "Has connected to the server and is now online...\n")
+            snakeIndex += 1
 
-    def sendDisplaySettings(self, conn):
-        settings = [self.jungle.rows, self.jungle.cols, self.jungle.blockSize]
+    def sendDisplaySettings(self, conn, snakeIndex):
+        settings = [self.jungle.rows, self.jungle.cols, self.jungle.blockSize, snakeIndex]
         msg = pickle.dumps(settings)
         conn.send(msg)
+        self.recvColor(conn, snakeIndex)
+
+    def recvColor(self, conn, snakeIndex):
+        incoming_msg = conn.recv(1024)
+        snakeColor = pickle.loads(incoming_msg)
+        snakeColor = snakeColor.split(",")
+        for i in range(len(snakeColor)):
+            snakeColor[i] = int(snakeColor[i])
+        snakeColor = (snakeColor[0], snakeColor[1], snakeColor[2])
+        self.jungle.snakes[snakeIndex].color = snakeColor
 
     #THREADING FUNCTIONS
     def startThreads(self):
